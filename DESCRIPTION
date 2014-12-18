@@ -6,7 +6,7 @@ Authors@R: c(person("Mikko", "Vihtakari", role=c("aut", "cre"), email="mikko.vih
 Maintainer: Mikko Vihtakari <mikko.vihtakari@gmail.com>
 Description: Provides functions to measure growth patterns and align
     sampling spots in chronologically deposited materials. The package is
-    intended for the fields of geology, sclerochronology, and dentrochronology.
+    intended for the fields of sclerochronology, dentrochronology and geology.
 Depends:
     R (>= 3.0),
     RImageJROI,
