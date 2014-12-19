@@ -8,7 +8,7 @@
 #' @param types optional. A character vector specifying the \code{strType} of ROI objects to be considered as sample spots (see \code{\link{plot.ijroi}} for possible pattern types). Defaults to \code{c("oval", "freehand", "rect")} meaning that oval and freehand selections, as well as rectangle tool selections will be used to calculate the spatial extent of sample spots.
 #' @return Returns a list of class 'rawDist' with \code{\link{hyperframe}} containing spot size information.
 #' @author Mikko Vihtakari
-#' @seealso \code{\link{read.ijdata}} \code{\link{spot.dist}} \code{\link{assign.value}}  
+#' @seealso \code{\link{read.ijdata}} \code{\link{spot.dist}} \code{\link{assign.value}} \code{\link{plot.spotDist}}  
 #' @import spatstat RImageJROI
 #' @export
 #' 

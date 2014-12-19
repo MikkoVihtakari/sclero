@@ -2,14 +2,14 @@ sclero
 ======
 **An R package to measure growth patterns and align sampling spots in photographs**
 
-This is a developmental version of the *sclero* package providing functions to measure growth patterns and align sampling spots in chronologically deposited materials. The package is intended for the fields of sclerochronology, dentrochronology and geology. This R package is connected to the package author's PhD thesis and further presented in manuscripts under revision. The package is, therefore, subject to changes prior to a final stable version to be submitted to CRAN. Nevertheless, all the package *should* work as intended already.
+This is a developmental version of the *sclero* package providing functions to measure growth patterns and align sampling spots in chronologically deposited materials. The package is intended for the fields of sclerochronology, dentrochronology and geology. This R package is connected to the package author's PhD thesis and further presented in manuscripts under revision. The package is, therefore, subject to changes prior to a final stable version to be submitted to CRAN. Nevertheless, all functions included in the package *should* work as intended already.
 
 Installation
 -------
 Using the *devtools* package:
 ```{r}
 library(devtools)
-install_github("MikkoVihtakari/sclero")
+install_github("MikkoVihtakari/sclero", dependencies = TRUE)
 ```
 
 User Manual
