@@ -4,7 +4,7 @@
 \name{shellspots}
 \alias{shellspots}
 \title{Coordinates of sample spots and growth lines along a bivalve mollusk shell section}
-\format{\code{IJDATA} object. A list containing ImageJ ROI information about sample spots and growth lines along a bivalve mollusk shell section. The information is acquired by running \link{ijzip} dataset through the \code{\link{read.ijdata}} function. The list contains following data frames / vectors:
+\format{\code{IJDATA} object. A list containing ImageJ ROI information about sample spots and growth lines along a bivalve mollusk shell section. The information is acquired by running "shellspots.zip" dataset through the \code{\link{read.ijdata}} function (see Examples). The list contains following data frames / vectors:
 \itemize{
   \item spots.x. A data frame containing x-coordinates for sample spots with each sample spot sequence in its own column.
   \item spots.y. A data frame containing y-coordinates for sample spots.

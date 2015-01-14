@@ -20,39 +20,56 @@
 #' 
 #' \code{\link{spot.dist}} for aligning sample spots.
 #' 
-#' @examples W <- square(10)
+#' @examples 
+#' dev.off()
+#' W <- square(10)
 #' S <- ppp(x = c(7, 5, 3), y = rep(5,3), window = W)
 #' G <- psp(x0 = c(8,6,4,2), y0 = rep(2,4), x1 = c(8,6,4,2), y1 = rep(8,4), window = W)
-#' M <- psp(x0 = 8, x1 = 0, y0 = 5, y1 = 5, window = W)
-#' create.rawDist(spots = S, gbs = G, main = M)
+#' M <- psp(x0 = 0, x1 = 8, y0 = 5, y1 = 5, window = W)
+#' x <- create.rawDist(spots = S, gbs = G, main = M)
+#' plot(x)
+#' 
+#' ## Generate random points for alignment
+#' set.seed(1)
+#' S <- rpoint(n = 5, win = owin(xrange = c(2,7), yrange = c(5,7)))
+#' S$window <- W
+#' G <- psp(x0 = c(7,5,3,1), y0 = rep(2,4), x1 = c(9,7,5,3), y1 = rep(8,4), window = W)
+#' M <- psp(x0 = 0, x1 = 8, y0 = 1, y1 = 1, window = W)
+#' x <- create.rawDist(spots = S, gbs = G, main = M)
+#' plot(x)
+#' y <- spot.dist(x)
+#' plot(y)
 #' @import spatstat
 #' @export
 
-# Test parameters. Delete.
-# W <- square(10)
-# spots <- ppp(x = c(7, 5, 3), y = rep(5,3), window = W)
-# main <- psp(x0 = 8, x1 = 0, y0 = 5, y1 = 5, window = W)
-# gbs <- psp(x0 = c(8,6,4,2), y0 = rep(2,4), x1 = c(8,6,4,2), y1 = rep(8,4), window = W)
-# sample.name = NULL; scaling.factor = 1; unit = NULL; spot.seq.names = NULL
-
 create.rawDist <- function(spots, gbs, main, spot.seq.names = NULL, sample.name = NULL, scaling.factor = 1, unit = NULL){
 
-if(!all(c(class(spots)[1], class(gbs)[1], class(main)[1]) %in% c("ppp", "psp"))) stop("'spots', 'gbs' or 'main' are not spatstat objects")
+if(!class(gbs)[1] %in% c("psp")) stop("'gbs' is not a spatstat 'psp' object")
+if(!class(main)[1] %in% c("psp")) stop("'main' is not a  spatstat 'psp' object")
 
+if(class(spots) == "list") {
+  if(!all(unlist(lapply(spots, function(k) class(k) == "ppp")))) stop("list of 'spots' contains elements that are not spatstat 'ppp' objects") 
+} else {
+  if(!class(spots)[1] %in% "ppp") stop("'spots' is not a spatstat 'ppp' object")
+}
+  
 if(main$n != 1) stop("Only one main axis allowed")
 if(is.null(marks(main))) marks(main) <- "main"
-  
-if(is.null(marks(spots))) marks(spots) <- 1:spots$n
-if(is.null(marks(gbs))) marks(gbs) <- paste0("l", 1:gbs$n)
 
+if(is.null(marks(gbs))) marks(gbs) <- paste0("l", 1:gbs$n)
+  
 if(class(spots) == "list") {spots <- spots} else {
 if(class(spots) == "ppp") spots <- list(spots)} 
-  
+ 
 if(is.null(spot.seq.names)) {
   names(spots) <- paste0("s", 1:length(spots))} else {
     if(length(spot.seq.names) == length(spots)) {names(spots) <- spot.seq.names} else
   stop("length of 'spot.seq.names' and number of 'spots' sequences differ")}
 
+spots <- lapply(spots, function(k){
+  if(is.null(marks(k))) marks(k) <- 1:k$n
+  k})
+  
 range.x <- range(c(spots$window$xrange, gbs$window$xrange, main$window$xrange))
 range.y <- range(c(spots$window$yrange, gbs$window$yrange, main$window$yrange))
 

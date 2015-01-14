@@ -4,25 +4,42 @@
 \alias{plot.spotDist}
 \title{Plot spotDist object}
 \usage{
-\method{plot}{spotDist}(x, ..., sample.name = "keep",
-  crossing.points = FALSE, size = FALSE)
+\method{plot}{spotDist}(x, ..., sample.name = "keep", spot.type = "id",
+  spot.size = 2, spot.color = NULL, main.type = "all",
+  color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias =
+  1)(100), highlight.gbs = NULL, highlight.col = "red",
+  crossing.points = FALSE)
 }
 \arguments{
 \item{x}{\code{\link[=spot.dist]{spotDist}} object}
 
-\item{...}{Arguments to be passed to other methods, such as \link[=par]{graphical parameters}. Not implemented yet.}
+\item{...}{Arguments to be passed to other methods, such as \link[=par]{graphical parameters}.}
 
-\item{sample.name}{A character vector of length 1 specifying the sample name to be plotted as an overall title for the plot (\code{\link[=plot.default]{main}}). Defaults to \code{"keep"} meaning that the sample name will be extracted from the \code{\link[=spot.dist]{spotDist}} object.}
+\item{sample.name}{A character argument specifying the sample name to be plotted as an overall title for the plot (\code{\link[=plot.default]{main}}). Defaults to \code{"keep"} meaning that the sample name will be extracted from the \code{\link[=convert.ijdata]{rawDist}} object. The plot title can be omitted by specifying \code{sample.name = NULL}.}
+
+\item{spot.type}{A character argument with three possible levels (\code{"id"}, \code{"value"}, and \code{"idvalue"}) indicating how sample spots should be plotted. Defaults to \code{"id"}, which plots sample spot numbers within open circles. The size of the circles can be controlled using the \code{spot.size} argument. The option \code{"value"} results to a sample map where the color of circles is related to a value through \code{\link{assign.value}} function. The color scale can be set using the \code{color.palette} argument, and size of the symbols (pch = 21) and through the \code{spot.size} argument. The option \code{"idvalue"} combines \code{"id"} and \code{"value"} leading to a sample map with sample spot numbers.}
+
+\item{spot.size}{An integer or a character argument with value \code{"actual"} indicating the size (\code{\link[=par]{cex}}) of points. If \code{"actual"}, the actual size and shape of sample spots will be plotted. In this case, \link[=assign.size]{sample spot size information} is required. Defaults to 2 meaning that sample spots are plotted as points with pch = 21 and cex = 2.}
+
+\item{spot.color}{A vector with equal length to number of spot sequences defining the color of sample spot labels. If \code{NULL} (default) a preset set of colors will be used.}
+
+\item{main.type}{A character argument with four possible levels (\code{"all"}, \code{"axis"}, \code{"ends"}, and \code{"none"}) indicating how the distance / main axis should be plotted. Defaults to \code{"all"} indicating that both the main axis and end points should be plotted. If \code{"axis"} only the main axis will be plotted. If \code{"ends"} only the end points will be plotted, and if \code{"none"} the main axis intormation will not be plotted.}
+
+\item{color.palette}{color palette used for "value" and "idvalue" \code{spot.type} options. Passed to \code{\link[grDevices]{colorRampPalette}}.}
+
+\item{highlight.gbs}{A character vector specifying the names of growth bands to be highlighted (i.e. colored with a different color than "darkgrey"). If \code{NULL} (default) all growth bands will be drawn using the standard color.}
+
+\item{highlight.col}{A character argument specifying the color to be used in growth band highlighting (\code{highlight.gbs}).}
 
 \item{crossing.points}{Indicates whether the crossing points between sampling spot sequence traverses and growth lines should be plotted. Defaults to FALSE.}
-
-\item{size}{optional. A logical vector of length 1 indicating whether actual spot size should be used in plotting. Defaults to FALSE.}
 }
 \description{
 Plots a map of \code{\link[=spot.dist]{spotDist}} object.
 }
 \details{
-Because the function plots a sample map, the aspect ratio is forced to 1 and cannot be changed. This might cause troubles when trying to set the axis limits. Try resizing the graphics window.
+The \pkg{sclero} package currently uses the \pkg{graphics} package distributed with R for plotting (see \code{\link[graphics]{plot}}). Plotting sample maps is carried out by the \code{sclero:::samplemap} function, which works as an internal function and therefore has not been exported. Users willing to modify \pkg{sclero} plots beyond the flexibility allowed by the \code{\link{plot.spotDist}} function are instructed to modify the \code{\link{samplemap}} function, which consists of standard R graphics syntax. It should be noted that the \code{\link{samplemap}} (and therefore also the \code{\link{plot.spotDist}}) function calls for the {\code{\link[graphics]{layout}}} function every time the arguments \code{spot.type = "value"} or \code{spot.type = "idvalue"} are used. Consequently, the graphics window is divided into two regions that might cause issues when combining \pkg{sclero} plots with other graphics. The users are adviced to consider the graphics window resetting procedure specified in {\code{\link[graphics]{layout}}} examples.
+
+Because the function plots a sample map, the \strong{aspect ratio} is forced to 1 and cannot be changed. If this causes troubles when trying to set the axis limits (\code{ylim} and \code{xlim}), try resizing the graphics window.
 }
 \examples{
 data(shellspots)

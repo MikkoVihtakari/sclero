@@ -38,7 +38,7 @@
 #' \code{\link[RImageJROI]{read.ijroi}} and \code{\link[RImageJROI]{read.ijzip}} for reading ImageJ ROI and .zip files.
 #' 
 #' @examples 
-#' path <- file.path(system.file("extdata", package = "sclero"), "ijdata.zip") # Locate the example zip file
+#' path <- file.path(system.file("extdata", package = "sclero"), "shellspots.zip") # Locate the example zip file
 #' dat <- read.ijdata(path) # You can replace 'path' by 'Your_file_name.zip'
 #' summary(dat)
 #' 

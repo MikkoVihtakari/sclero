@@ -4,28 +4,34 @@
 \alias{spot.dist}
 \title{Distance of sampling spots from margin along a measurement axis}
 \usage{
-spot.dist(rawDist, alignment = "closest", sample.name = NULL,
-  run.ae = TRUE, use.centroids = TRUE)
+spot.dist(rawDist, sample.name = NULL, run.ae = TRUE,
+  use.centroids = TRUE)
 }
 \arguments{
 \item{rawDist}{a \code{\link[=convert.ijdata]{rawDist}} object for which the alignment should be done.}
 
-\item{alignment}{Should the sample spots be aligned according to the shortest distance to surrounding growth lines (default, \code{closest}) or according to the distance to the crossing points of the sample sequence traverse and growth lines (\code{traverse}, see 'Details' for further information.)}
+\item{sample.name}{An optional parameter over-riding the sample name. If \code{NULL} (default), the sample name will be passed from the previous steps (\code{\link{read.ijdata}}, \code{\link{convert.ijdata}})}
 
-\item{sample.name}{An optional parameter over-riding the sample name. If left empty the sample name will be passed from the previous steps (\code{\link{read.ijdata}}, \code{\link{convert.ijdata}})}
+\item{run.ae}{a logical indicating whether to run averaging error estimation, if \link[=assign.size]{rawDist contains spot size information}. Defaults to TRUE.}
 
-\item{run.ae}{a logical indicating whether to run averaging error estimation, if \link[=assign.size]{'rawDist contains spot size information}. Defaults to TRUE.}
-
-\item{use.centroids}{a logical indicating whether to use centroids of spot.owins instead of spots, if \link[=assign.size]{'rawDist contains spot size information}. Defaults to TRUE.}
+\item{use.centroids}{a logical indicating whether to use centroids of spot.owins instead of spots, if \link[=assign.size]{rawDist contains spot size information}. Defaults to TRUE.}
 }
 \value{
-Returns a list of class \code{spotDist}, which contains \link[spatstat]{spatstat} point patterns. The returned \code{rawDist} can be plotted using the generic plotting command.
+Returns a list of class \code{spotDist} containing information of the aligned sample spots and the digitized representation of the shell cross-section, which was already included in the \code{\link[=convert.ijdata]{rawDist}} object.
 }
 \description{
 Scale the location of sampling spots to visible growth bands, project the sampling spots along a measurement axis (\code{main}) and calculate the distance from margin. Useful for locating high-resolution LA-ICP-MS or SIMS sample spots in samples with non-linear growth bands.
 }
 \details{
-daa
+The alignment information with sample spot numbers is stored as a sublist called \code{output} and can be extracted to a data.frame. Otherwise the object behaves like any list in R. Relevant data can be subsetted as needed. Detailed data containing information of the alignment process is stored in a sublist called \code{det.dat}.
+
+The function can either project growth lines on the distance (main) axis or use the crossing points between growth lines and the main axis. These two types of the main axis can be used for different applications. The main axis type is automatically selected by the following criteria:
+\describe{
+\item{\strong{along}}{Approperiate for samples with cut-off growth lines such as bivalve margin cross-sections and tree, sediment or ice-cores. This option is selected by placing the measurement axis such that \strong{it does not cross any of the marked growth lines}. The location of each growth line is projected along the measurement axis from the beginning of the growth line (the point where you started marking the growth line in ImageJ).}
+\item{\strong{cross}}{Approperiate for approximately round cross-sections: samples where the growth lines continue through the entire width of the sample (such as tree, coral or calcareous algae cross-sections and umbo-regions of bivalves). This type is selected by making the \strong{main axis to cross each individual marked growth line}. The location of each growth line along the main axis is considered as a crossing point.}
+}
+
+These criteria are set due to the need of defining a location for each marked growth line along the distance (main) axis. The choice is rigid, to simplify calculations, and to avoid bias in results by allowing two different methods for growth line locations. The easiest way to test which \code{type} suits a particular sample best is to save two sets of ImageJ zip files by moving the measurement axis.
 }
 \examples{
 data(shellspots)
@@ -44,5 +50,7 @@ Mikko Vihtakari
 \code{\link{convert.ijdata}} for converting the coordinate information to \link[spatstat]{spatstat} point patterns.
 
 \code{\link{plot.spotDist}} for plotting.
+
+\code{\link{print.spotDist}} for printing.
 }
 

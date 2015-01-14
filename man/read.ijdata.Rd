@@ -52,7 +52,7 @@ In order to minimize the amount of text to be typed by a user, ROI objects of ty
 Punctuation characters other than \code{_} or \code{.} should not be used as names of \code{spots} or \code{gbs}, because they tend to confuse the internal \code{\link[base]{grep}} functions in \code{\link{spot.dist}} function. Hence it is adviced to use one of the options renaming invalid names of \code{spots} and \code{gbs} (\code{"generate.invalid"}, \code{"generate"}, \code{"keep"}).
 }
 \examples{
-path <- file.path(system.file("extdata", package = "sclero"), "ijdata.zip") # Locate the example zip file
+path <- file.path(system.file("extdata", package = "sclero"), "shellspots.zip") # Locate the example zip file
 dat <- read.ijdata(path) # You can replace 'path' by 'Your_file_name.zip'
 summary(dat)
 

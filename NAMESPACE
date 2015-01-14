@@ -2,6 +2,7 @@
 
 S3method(plot,rawDist)
 S3method(plot,spotDist)
+S3method(print,spotDist)
 export(assign.size)
 export(assign.value)
 export(coln)

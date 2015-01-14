@@ -4,20 +4,41 @@
 \alias{assign.value}
 \title{Assign values to 'rawDist' objects for plotting.}
 \usage{
-assign.value(rawDist, value)
+assign.value(rawDist, value, value.name = NULL)
 }
 \arguments{
 \item{rawDist}{\code{\link[=convert.ijdata]{rawDist}} object to which the values should be assigned.}
 
-\item{value}{A list of \code{\link{data.frame}}s of the same length than spot spequences (\code{\link[=read.ijdata]{spots}}). Each \code{data.frame} has to have identical length to spots. First column specifies the order. Second column containing the values.}
+\item{value}{a \code{\link{data.frame}} or list of data.frames of the same length than spot spequences (\code{\link[=read.ijdata]{spots}}). Each \code{data.frame} has to have identical length to spots. First column specifies the order. Second column containing the values (see Details).}
+
+\item{value.name}{a character or function defining the name for the assigned value. Can be \code{\link[base]{expression}}}
 }
 \value{
-Returns a list of class 'rawDist' containing spot value information.
+Returns a list of class \code{\link[=convert.ijdata]{rawDist}} containing spot value information.
 }
 \description{
 Assigns values to \code{\link[=convert.ijdata]{rawDist}} objects for \link[=plot.rawDist]{spatial density plotting}.
 }
+\details{
+This function can be used to plot values as color-densities on \link[=plot.rawDist]{sample maps}. The function is useful e.g. for examining the spatial distribution of geochemical data, such as element ratios or isotope ratios, along sample materials. If the \code{\link[=convert.ijdata]{rawDist}} object contains only one sample spot sequence, the \code{value} parameter should be expressed as a data.frame with two columns. If the \code{rawDist} object consists of several sample spot sequences, the \code{value} parameter should be a list of data.frames with length equivalent to number of spot sequences. The first column in all \code{value} data.frames represents spot number and should be equivalent to \code{$spots} marks in the \code{rawDist} object. The second column represents the values to be assigned. Column names are ignored.
+}
+\examples{
+data(barium)
+data(shellsizes)
+
+## rawDist
+shellvalues <- assign.value(shellsizes, barium, value.name = "Ba/Ca")
+plot(shellvalues, spot.size = "actual", spot.type = "value", main.type = "none")
+
+## spotDist
+shellvalues.aligned <- spot.dist(shellvalues)
+plot(shellvalues.aligned, spot.size = "actual", spot.type = "idvalue",
+spot.color = "darkgrey", highlight.gbs = c("WG_start", "WG_end"))
+}
 \author{
 Mikko Vihtakari
+}
+\seealso{
+\code{\link{read.ijdata}} \code{\link{spot.dist}} \code{\link{assign.size}} \code{\link{plot.rawDist}}
 }
 

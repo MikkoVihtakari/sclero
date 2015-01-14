@@ -4,28 +4,40 @@
 \alias{assign.size}
 \title{Assign spot sizes to 'rawDist' objects for estimating spatial extent of sample averaging error.}
 \usage{
-assign.size(rawDist, file = NULL, names = "generate.invalid",
+assign.size(rawDist, file = NULL, path = NULL, names = "generate.invalid",
   types = c("oval", "freehand", "rect"))
 }
 \arguments{
 \item{rawDist}{\code{\link[=convert.ijdata]{rawDist}} object to which the values should be assigned.}
 
-\item{file}{optional. ImageJ .zip file containing the spot size information. If \code{NULL}, the file is assumed to be the same than from where 'rawDist' \link[=read.ijdata]{data was read from}. The file must be located in the working directory.}
+\item{file}{optional. ImageJ .zip file containing the spot size information. If \code{NULL} (default), the file name is assumed to be the same than from where \code{rawDist} \link[=read.ijdata]{data was read from}.}
+
+\item{path}{optional. A character argument specifying the location of the \code{file}. If \code{NULL} (default), the \code{file} is assumed to be located in the \link[=getwd]{working directory}. See \code{\link[base]{dir}} for further information.}
 
 \item{names}{optional. A character argument specifying how the names of \code{spots} should be generated. See \code{\link{read.ijdata}} for details. Defaults to "generate.invalid".}
 
 \item{types}{optional. A character vector specifying the \code{strType} of ROI objects to be considered as sample spots (see \code{\link{plot.ijroi}} for possible pattern types). Defaults to \code{c("oval", "freehand", "rect")} meaning that oval and freehand selections, as well as rectangle tool selections will be used to calculate the spatial extent of sample spots.}
 }
 \value{
-Returns a list of class 'rawDist' with \code{\link{hyperframe}} containing spot size information.
+Returns a list of class 'rawDist' with a list of \code{\link{ppp}} objects containing locations of sample spot centroids and a list of \code{\link{hyperframe}}s containing spot size information.
 }
 \description{
 Assigns spot sizes to \code{\link[=convert.ijdata]{rawDist}} objects for \link[=spot.dist]{estimating averaging error}.
+}
+\details{
+If the .zip file containing spot size information is the same than from which the \code{rawDist} object was derived from and located in your working directory, assignment of spot sizes is simply specified by \code{assign.size(rawDist)}. Otherwise, use the \code{path} argument to specify the folder where the \code{file} is located.
+}
+\examples{
+data(shellspots)
+shell <- convert.ijdata(shellspots)
+path <- file.path(system.file("extdata", package = "sclero"))
+sizes <- assign.size(shell, path = path)
+sizes$spot.area
 }
 \author{
 Mikko Vihtakari
 }
 \seealso{
-\code{\link{read.ijdata}} \code{\link{spot.dist}} \code{\link{assign.value}}
+\code{\link{read.ijdata}} \code{\link{spot.dist}} \code{\link{assign.value}} \code{\link{plot.spotDist}}
 }
 

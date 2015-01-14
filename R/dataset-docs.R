@@ -4,7 +4,7 @@
 #' @keywords datasets
 #' @name shellspots
 #' @usage data(shellspots)
-#' @format \code{IJDATA} object. A list containing ImageJ ROI information about sample spots and growth lines along a bivalve mollusk shell section. The information is acquired by running \link{ijzip} dataset through the \code{\link{read.ijdata}} function. The list contains following data frames / vectors:
+#' @format \code{IJDATA} object. A list containing ImageJ ROI information about sample spots and growth lines along a bivalve mollusk shell section. The information is acquired by running "shellspots.zip" dataset through the \code{\link{read.ijdata}} function (see Examples). The list contains following data frames / vectors:
 #' \itemize{
 #'   \item spots.x. A data frame containing x-coordinates for sample spots with each sample spot sequence in its own column.
 #'   \item spots.y. A data frame containing y-coordinates for sample spots.
@@ -18,11 +18,20 @@
 #' }
 NULL
 
-#' \code{ijzip} object from \code{\link[RImageJROI]{read.ijzip}} function (RImageJROI package)
+#' Coordinates of sample spots together with spot size information and growth lines along a bivalve mollusk shell section
 #'
 #' @docType data
 #' @keywords datasets
-#' @name ijzip
-#' @usage data(ijzip)
-#' @format \code{ijzip} object obtained using \code{\link[RImageJROI]{read.ijzip}} function from RImageJROI package. A list containing ImageJ ROI information about sample spots and growth lines along a bivalve mollusk shell section.
+#' @name shellsizes
+#' @usage data(shellsizes)
+#' @format \code{rawDist} object. A list containing \link[spatstat]{spatstat} point and line patterns as well as owin objects defining the sample spot, growth line, distance axis and sample spot size coordinates.
+NULL
+
+#' Barium to calcium ratios for sample spots in shellspots dataset
+#'
+#' @docType data
+#' @keywords datasets
+#' @name barium
+#' @usage data(barium)
+#' @format A dataframe containing Ba/Ca information for \link{shellspots}. The object is ready for \code{\link{assign.size}} function.
 NULL
