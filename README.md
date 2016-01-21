@@ -2,7 +2,7 @@ sclero
 ======
 **An R package to measure growth patterns and align sampling spots in photographs**
 
-This is the developmental version of the *sclero* package providing functions to measure growth patterns and align sampling spots in chronologically deposited materials. The package is intended for the fields of sclerochronology, dendrochronology and geology. A stable version of the package can be found from [CRANsclero][CRAN].
+This is the developmental version of the *sclero* package providing functions to measure growth patterns and align sampling spots in chronologically deposited materials. The package is intended for the fields of sclerochronology, dendrochronology and geology. A stable version of the package can be found from [CRAN][CRAN].
 
 Installation of the GitHub version
 -------
@@ -27,7 +27,7 @@ The *sclero* package depends on:
 - [spatstat][spatstat] package. Used for geometric calculations.
 - [plyr][plyr] package. Used for quicker and easier list calculations. This dependency could potentially be removed, but the removal would require rewriting many functions included in the *sclero* package
 
-[CRANsclero]: 
+[CRAN]: https://cran.r-project.org/package=sclero
 [RImageJROI]: https://github.com/davidcsterratt/RImageJROI
 [spatstat]: http://cran.r-project.org/web/packages/spatstat/index.html
 [plyr]: https://github.com/hadley/plyr
