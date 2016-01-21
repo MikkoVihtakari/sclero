@@ -1,4 +1,5 @@
 ##' @title Print \code{spotDist} objects
+##' @description \code{\link{print}} function for \code{\link[=spot.dist]{spotDist}} objects
 ##' @param x \code{spotDist} object to be printed.
 ##' @param ... further arguments passed to \code{\link{print}}.
 ##' @method print spotDist

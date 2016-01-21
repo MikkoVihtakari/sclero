@@ -1,12 +1,12 @@
 Package: sclero
-Title: Measure growth patterns and align sampling spots in photographs
+Title: Measure Growth Patterns and Align Sampling Spots in Photographs
 Version: 0.2
-Date: 2015-01-14
+Date: 2016-01-21
 Authors@R: c(person("Mikko", "Vihtakari", role=c("aut", "cre"), email="mikko.vihtakari@gmail.com"))
 Maintainer: Mikko Vihtakari <mikko.vihtakari@gmail.com>
 Description: Provides functions to measure growth patterns and align
     sampling spots in chronologically deposited materials. The package is
-    intended for the fields of sclerochronology, dentrochronology and geology.
+    intended for the fields of sclerochronology, dendrochronology and geology.
 Depends:
     R (>= 3.0),
     RImageJROI,
@@ -15,3 +15,4 @@ Depends:
 License: GPL-3
 LazyData: true
 URL: https://github.com/MikkoVihtakari/sclero
+RoxygenNote: 5.0.1

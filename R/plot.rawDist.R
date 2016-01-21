@@ -27,7 +27,10 @@
 #' shell_map <- convert.ijdata(shellspots)
 #' plot(shell_map)
 #' 
-#' @import spatstat
+#' @import spatstat 
+#' @importFrom grDevices colorRampPalette
+#' @importFrom stats na.omit
+#' @importFrom graphics axis layout par plot points text
 #' @export
 
 plot.rawDist <- function(x, ..., sample.name = "keep", spot.type = "id", spot.size = 2, spot.color = NULL, main.type = "all", color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias=1)(100), highlight.gbs = NULL, highlight.col = "red"){

@@ -1,4 +1,5 @@
 #' @title Print the order and names of columns in a data frame
+#' @description Prints the order and names of columns in a \code{\link[base]{data.frame}}.
 #' @param X a data.frame for which the column names should be printed.
 #' @return A list containing the column names and their numeric order.
 #' @author Mikko Vihtakari

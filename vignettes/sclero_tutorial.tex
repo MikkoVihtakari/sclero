@@ -33,6 +33,7 @@
 %%%
 %\VignetteIndexEntry{Align sampling spots in photographs}
 \title{Measure growth patterns and align sampling spots in photographs: \textit{sclero} tutorial}
+\usepackage{Sweave}
 \begin{document}
 
 \author{Mikko Vihtakari}
@@ -43,10 +44,7 @@
 
 
 %%%%% Sweave options %%%%%%%%
-\SweaveOpts{concordance=TRUE}
-<<initial_settings, echo=false>>=
-options(width=80, prompt = " ", continue = " ")
-@
+\input{sclero_tutorial-concordance}
 % Set graphics to textwidth
 \setkeys{Gin}{width=1\textwidth}
 %%%%%%%%%%%%%%
@@ -63,10 +61,12 @@ The \sclero package for \href{http://www.r-project.org}{R} \citep{R2014} provide
 
 The package is now uploaded to \href{https://cran.r-project.org/package=sclero}{CRAN}. If you want to use the developmental version (possibly with new features), please install it from GitHub using the \textit{devtools} package: 
 
-<<eval = F>>=
-library(devtools)
-install_github("MikkoVihtakari/sclero", dependencies = TRUE)
-@
+\begin{Schunk}
+\begin{Sinput}
+ library(devtools)
+ install_github("MikkoVihtakari/sclero", dependencies = TRUE)
+\end{Sinput}
+\end{Schunk}
 
 \subsection{Features}
 
@@ -142,52 +142,97 @@ We use a shell margin of a bivalve shell cross-section as an example (see \citea
 
 Next we can open R and load the \textit{sclero} package.
 
-<<>>=
-library(sclero)
-@
+\begin{Schunk}
+\begin{Sinput}
+ library(sclero)
+\end{Sinput}
+\end{Schunk}
 
 \mnote{read.ijdata} After this we use \texttt{read.ijdata} function to read and process the ImageJ .zip file containing ROIs. The code below is possible to run without having saved `shellspots.zip' file. If you followed the example above, replace `path' with the location of your ImageJ .zip file. 
 
-<<>>=
-path <- file.path(system.file("extdata", package = "sclero"), "shellspots.zip")
-dat <- read.ijdata(path, scale = 0.7812, unit = "um") 
-@
+\begin{Schunk}
+\begin{Sinput}
+ path <- file.path(system.file("extdata", package = "sclero"), "shellspots.zip")
+ dat <- read.ijdata(path, scale = 0.7812, unit = "um") 
+\end{Sinput}
+\end{Schunk}
 
 Note that we specified the \texttt{scale} and \texttt{unit} arguments in \texttt{read.ijdata} function, since the example photograph was calibrated. This step is not necessary, but produces actual distances instead of pixel distances ($\mathrm{\mu m}$ in this example; note that directly using $\mathrm{\mu}$ in R as a character works in some operating systems). The function returns a list of class \texttt{IJDATA} containing information about ROIs.
 
-<<>>=
-summary(dat)
-@
+\begin{Schunk}
+\begin{Sinput}
+ summary(dat)
+\end{Sinput}
+\begin{Soutput}
+               Length Class      Mode     
+spots.x         1     data.frame list     
+spots.y         1     data.frame list     
+gbs.x          14     data.frame list     
+gbs.y          14     data.frame list     
+main.x          1     data.frame list     
+main.y          1     data.frame list     
+sample.name     1     -none-     character
+scaling.factor  1     -none-     numeric  
+unit            1     -none-     character
+\end{Soutput}
+\end{Schunk}
 
 \mnote{\mbox{order}.
 \mbox{ijdata}} At this point it can be of interest to reorder some of the ROIs. The order of ROIs does not make a difference in subsequent calculations, but the output will be given in the order the of IJDATA object. \texttt{order.ijdata(..., print.order = TRUE)} function can be used to check the order of ROIs.
 
-<<>>=
-order.ijdata(dat, print.order = TRUE)
-@
+\begin{Schunk}
+\begin{Sinput}
+ order.ijdata(dat, print.order = TRUE)
+\end{Sinput}
+\begin{Soutput}
+$spots
+           Laser
+col.number     1
+
+$gbs
+           margin calcein l3 WG_start WG_end l6 l7 l8 l9 l10 l11 l12 l13 l14
+col.number      1       2  3        4      5  6  7  8  9  10  11  12  13  14
+\end{Soutput}
+\end{Schunk}
 
 The same function can be used to reorder and subset ROIs within IJDATA objects. Subsetting can be done by leaving out the elements you do not want to include in the IJDATA object. In the case of subsetting the function prints a warning to make sure that the user did not forget to specify all elements within the object. Say that we want to reorder the growth lines:
 
-<<>>=
-dat2 <- order.ijdata(dat, gbs = c(1,3,6:14,4,5,2))
-order.ijdata(dat2, print.order = TRUE)
-@
+\begin{Schunk}
+\begin{Sinput}
+ dat2 <- order.ijdata(dat, gbs = c(1,3,6:14,4,5,2))
+ order.ijdata(dat2, print.order = TRUE)
+\end{Sinput}
+\begin{Soutput}
+$spots
+           Laser
+col.number     1
+
+$gbs
+           margin l3 l6 l7 l8 l9 l10 l11 l12 l13 l14 WG_start WG_end calcein
+col.number      1  2  3  4  5  6   7   8   9  10  11       12     13      14
+\end{Soutput}
+\end{Schunk}
 
 \mnote{\mbox{convert}.
 \mbox{ijdata}} The information in IJDATA objects is meant to be user modifiable. The object behaves like any \texttt{list} in R only that the name of elements (\texttt{\$spots.x, \$spots.y, ...}) should not be changed to ensure that subsequent functions work correctly. In order to align the sample spots along the main axis, we need to convert the information to \href{http://www.spatstat.org/spatstat/}{\textit{spatstat}} \citep{Baddeley2005} objects using \texttt{convert.ijdata} function.
 
-<<>>=
-shell <- convert.ijdata(dat)
-@
+\begin{Schunk}
+\begin{Sinput}
+ shell <- convert.ijdata(dat)
+\end{Sinput}
+\end{Schunk}
 
 \mnote{plot.
 rawDist} The function returns a list of class \texttt{rawDist}, which can be plotted using the generic plotting function. The plot will be a representation of the ROIs, with the exception that the coordinate system is flipped vertically. This is because of coordinate system differences between Java (ImageJ) and R.
 
 \begin{figure}[H]
 \begin{center}
-<<label=plot1,fig = TRUE,include=TRUE, width = 10, height = 4>>=
-plot(shell)
-@
+\begin{Schunk}
+\begin{Sinput}
+ plot(shell)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sclero_tutorial-plot1}
 \end{center}
 \caption{The digitized representation of the shell section. Red numbers show the location of the sample spots. Grey lines represent the marked growth lines and the purple line the main axis to which the sample spots will be aligned. Y-axis coordinates are flipped due to a difference in the coordinate system between R and ImageJ (Java).}
 \label{Fig:rawDist}
@@ -210,26 +255,116 @@ spotDist} The function returns a list of class \texttt{spotDist} containing new 
 
 \begin{figure}[H]
 \begin{center}
-<<label=plot2,fig = TRUE,include=TRUE, width = 10, height = 4>>=
-aligned <- spot.dist(shell)
-plot(aligned)
-@
+\begin{Schunk}
+\begin{Sinput}
+ aligned <- spot.dist(shell)
+ plot(aligned)
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sclero_tutorial-plot2}
 \end{center}
 \caption{Aligned sample spots along the measurement axis together with the digitized presentation from Figure \ref{Fig:rawDist}.}
 \end{figure}
 
 Typing the name of a \texttt{spotDist} object prints summarized information about the sample spot alignment:
 
-<<>>=
-aligned
-@
+\begin{Schunk}
+\begin{Sinput}
+ aligned
+\end{Sinput}
+\begin{Soutput}
+"spotDist" object for shellspots
+Main axis type: along
+Scaling factor: 0.7812 pixels/um
+
+Including following elements:
+       list.elements       type ncol nrow length
+ spots               list          0    0      1
+ gbs                 psp           0    0      5
+ main                psp           0    0      5
+ window              owin          0    0      4
+ start.main          ppp           0    0      6
+ end.main            ppp           0    0      6
+ sample.name         character     0    0      1
+ scaling.factor      numeric       0    0      1
+ unit                character     0    0      1
+ main.type           character     0    0      1
+ gb.projections      ppp           0    0      6
+ gb.start            ppp           0    0      6
+ gb.end              ppp           0    0      6
+ gb.projections.dist data.frame    4   14      4
+ mid.point.type      character     0    0      1
+ det.dat             list          0    0      1
+ output              list          0    0      1
+
+Sample spot output:
+ spot       dist
+   1    94.62051
+   2   182.55956
+   3   243.07346
+   4   311.18224
+   5   346.60488
+   6   372.90810
+   7   399.64695
+   8   417.83668
+   9   458.90261
+   10  505.31901
+   11  544.43780
+   12  656.68984
+   13  758.02466
+   14  874.91661
+   15 1019.98703
+   16 1105.41540
+   17 1226.03512
+   18 1341.27597
+   19 1437.40469
+   20 1567.85498
+   21 1670.48644
+   22 1729.37731
+   23 1815.60525
+   24 1889.99943
+   25 1968.36939
+   26 2048.81858
+   27 2174.97867
+   28 2341.48465
+   29 2449.03098
+   30 2534.59278
+   31 2660.58426
+   32 2811.12793
+   33 2978.10571
+   34 3115.26282
+   35 3283.93206
+   36 3577.47434
+   37 3680.41824
+   38 3765.36259
+
+Growth line output:
+     line             gap gap.l.main     dist0
+ margin   margin-l9        102.40655    0.0000
+ l9       l9-l8            168.97081  102.4066
+ l8       l8-l7            279.05786  271.3774
+ l7       l7-l13           459.54941  550.4352
+ l13      l13-l10           96.00614 1009.9846
+ l10      l10-l11          497.95187 1105.9908
+ l11      l11-l12          413.46646 1603.9427
+ l12      l12-l6           325.14081 2017.4091
+ l6       l6-WG_end        343.06196 2342.5499
+ WG_end   WG_end-WG_start  322.58065 2685.6119
+ WG_start WG_start-l3      565.79621 3008.1925
+ l3       l3-calcein        61.44393 3573.9887
+ calcein  calcein-l14      375.06400 3635.4327
+ l14      NA                      NA 4010.4967
+\end{Soutput}
+\end{Schunk}
 
 The alignment information with sample spot numbers is stored as a sublist called \texttt{output} and can be extracted to a data.frame (see below). Otherwise the object behaves like any list in R. Relevant data can be subset as needed. Detailed data containing information of the alignment process is stored in a sublist called \texttt{det.dat}.
 
-<<eval = F>>=
-aligned$output ## Results shown above
-aligned$det.dat ## Results not shown here to save space
-@
+\begin{Schunk}
+\begin{Sinput}
+ aligned$output ## Results shown above
+ aligned$det.dat ## Results not shown here to save space
+\end{Sinput}
+\end{Schunk}
 
 \subsubsection{\texttt{spot.dist} settings} \label{sec:settings}
 
@@ -281,41 +416,71 @@ The \sclero package can estimate the size of each sample spot, if size informati
 
 We can either re-read the shellspots.zip file into R (see Section \ref{sec:read.ijdata}) or use the \texttt{rawDist} object (\texttt{shell}), which has already been loaded to R. In here we assume that the user has followed the steps above and has \texttt{shell} object loaded in R. If not, run the following code:
 
-<<eval = F>>=
-data(shellspots)
-shell <- convert.ijdata(shellspots)
-@
+\begin{Schunk}
+\begin{Sinput}
+ data(shellspots)
+ shell <- convert.ijdata(shellspots)
+\end{Sinput}
+\end{Schunk}
 
 \mnote{assign.
 size} Assigning the sample spot sizes to \texttt{rawDist} objects is done using the \texttt{assign.size} function. If the .zip file containing spot size information is the same than from which the \texttt{rawDist} object was derived from and located in your working directory, assignment of spot sizes is simply specified by \texttt{assign.size(name\_of\_the\_rawDist\_object)}. This tutorial, however, uses the datasets included in the \sclero package and the path of the shellspots.zip file has to be specified.
 
-<<>>=
-path <- file.path(system.file("extdata", package = "sclero"))
-shellsizes <- assign.size(shell, path = path)
-@
+\begin{Schunk}
+\begin{Sinput}
+ path <- file.path(system.file("extdata", package = "sclero"))
+ shellsizes <- assign.size(shell, path = path)
+\end{Sinput}
+\end{Schunk}
 \mnote{size
 information} Sample spot area and diameter can now be extracted from the \texttt{rawDist} object.
-<<>>=
-head(shellsizes$spot.area$spot.dat[[1]])
-@
+\begin{Schunk}
+\begin{Sinput}
+ head(shellsizes$spot.area$spot.dat[[1]])
+\end{Sinput}
+\begin{Soutput}
+Hyperframe:
+  spot dist2spot spot.owin.name spot.owins spot.area spot.diameter
+1    1  4.615401          size1     (owin)  5271.123      81.92446
+2    2  3.263581 0001-0378-0383     (owin)  4479.683      75.52411
+3    3  3.732048 0001-0365-0459     (owin)  4181.123      72.96397
+4    4  1.280082 0001-0355-0546     (owin)  4329.116      74.24404
+5    5  1.280082 0001-0343-0620     (owin)  4329.116      74.24404
+6    6  1.280082 0001-0334-0693     (owin)  4035.704      71.68390
+\end{Soutput}
+\end{Schunk}
 
 \mnote{dist2spot} The \texttt{dist2spot} column specifies the shortest distance between recalculated spot centroid location and the sample spot location assigned using the `Multi-point' tool. This distance is used to associate each sample spot circle with a sample spot. 
 
 \mnote{spot.dist
 extent} Calculating the maximum extent of each sample spot along the distance (main) axis (Figure \ref{Fig:traverse}) can now be conducted using the \texttt{spot.dist} function. Centroids of marked spots are automatically used to estimate the location of sample spots along the main axis, and the results therefore slightly differ from those obtained in Section \ref{sec:spot.dist}.
 
-<<>>=
-spotsizes <- spot.dist(shellsizes)
-head(spotsizes$output[[1]])
-@
+\begin{Schunk}
+\begin{Sinput}
+ spotsizes <- spot.dist(shellsizes)
+ head(spotsizes$output[[1]])
+\end{Sinput}
+\begin{Soutput}
+  spot      dist  dist.min dist.max spot.area spot.diameter
+1    1  99.74392  21.82515 215.3387  5271.123      81.92446
+2    2 180.81162  77.35968 273.1909  4479.683      75.52411
+3    3 244.93171 129.08129 331.0464  4181.123      72.96397
+4    4 313.45954 214.39049 383.7175  4329.116      74.24404
+5    5 344.50215 280.20636 408.4641  4329.116      74.24404
+6    6 373.51313 316.56173 430.3051  4035.704      71.68390
+\end{Soutput}
+\end{Schunk}
 
 The \texttt{output} element of a \texttt{spotDist} object now contains not only distance information on sample spot centroids (\texttt{dist} column), but also information on the extent (\texttt{dist.min} and \texttt{dist.max}), as well as spot area and diameter. The actual size of sample spots can now be plotted after a specification.
 
 \begin{figure}[H]
 \begin{center}
-<<label=plotsize,fig = TRUE,include=TRUE, width = 10, height = 4>>=
-plot(spotsizes, spot.size = "actual")
-@
+\begin{Schunk}
+\begin{Sinput}
+ plot(spotsizes, spot.size = "actual")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sclero_tutorial-plotsize}
 \end{center}
 \caption{Aligned sample spots along the measurement axis together with the digitized presentation from Figure \ref{Fig:rawDist}. The circles represent the actual sizes of sample spots.}
 \end{figure}
@@ -325,26 +490,42 @@ plot(spotsizes, spot.size = "actual")
 
 Sometimes there is a need for plotting sampling results spatially in relation to sample spots. The \sclero package provides a function for such sample map plotting. As an example we use Ba/Ca ratios calculated from LA-ICP-MS measurements. The dataset is included in the package.
 
-<<>>=
-data(barium)
-head(barium)
-@
+\begin{Schunk}
+\begin{Sinput}
+ data(barium)
+ head(barium)
+\end{Sinput}
+\begin{Soutput}
+  spots        Ba
+1     1 1.3632722
+2     2 1.2361042
+3     3 1.1321925
+4     4 1.0114307
+5     5 0.8961586
+6     6 0.7422160
+\end{Soutput}
+\end{Schunk}
 
 We load the \texttt{rawDist} object \texttt{shellsizes} from the example in Section \ref{sec:averaging_error}
 
-<<>>=
-data(shellsizes)
-@
+\begin{Schunk}
+\begin{Sinput}
+ data(shellsizes)
+\end{Sinput}
+\end{Schunk}
 
 \mnote{assign.
 value} The assignment of values is conducted using the \texttt{assign.value} function, where \texttt{value} is a data frame with a value for each sample spot. NA's are allowed values and lead to white sample spots. The \texttt{spot.type} argument has to be \texttt{"value"} or \texttt{"idvalue"} for density plotting.
 
 \begin{figure}[H]
 \begin{center}
-<<label=plotvalues,fig = TRUE,include=TRUE, width = 10, height = 3>>=
-shellvalues <- assign.value(shellsizes, barium, value.name = "Ba/Ca")
-plot(shellvalues, spot.size = "actual", spot.type = "value", main.type = "none")
-@
+\begin{Schunk}
+\begin{Sinput}
+ shellvalues <- assign.value(shellsizes, barium, value.name = "Ba/Ca")
+ plot(shellvalues, spot.size = "actual", spot.type = "value", main.type = "none")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sclero_tutorial-plotvalues}
 \end{center}
 \caption{Spatial density map of Ba/Ca over the shell sequence. The \texttt{spot.type} argument has to be \texttt{"value"} or \texttt{"idvalue"} to generate such maps. The \texttt{main.type} argument is used to remove the distance axis.}
 \end{figure}
@@ -353,11 +534,14 @@ A \texttt{rawDist} object with value information can be run through the \texttt{
 
 \begin{figure}[H]
 \begin{center}
-<<label=plotvaluesalign,fig = TRUE,include=TRUE, width = 10, height = 4>>=
-shellvalues.aligned <- spot.dist(shellvalues)
-plot(shellvalues.aligned, spot.size = "actual", spot.type = "idvalue",
-  spot.color = "darkgrey", highlight.gbs = c("WG_start", "WG_end"))
-@
+\begin{Schunk}
+\begin{Sinput}
+ shellvalues.aligned <- spot.dist(shellvalues)
+ plot(shellvalues.aligned, spot.size = "actual", spot.type = "idvalue",
+   spot.color = "darkgrey", highlight.gbs = c("WG_start", "WG_end"))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sclero_tutorial-plotvaluesalign}
 \end{center}
 \caption{Spatial density map using a \texttt{spotDist} object. The beginning and the end of a winter growth band (\textit{"WG\_start"} and \textit{"WG\_end"}) are highlighted and sample spot sequence color specified using the \texttt{spot.color} argument.
 }
@@ -376,20 +560,25 @@ Multiple spot sequences can be aligned with the \sclero package similarly to sin
 
 The alignment procedure is similar to single sequences (see Sections \ref{sec:read.ijdata} and \ref{sec:spot.dist}) with the exception that it now produces alignment for each sequence separately.
 
-<<>>=
-file <- file.path(system.file("extdata", package = "sclero"), "multi_spotseq.zip")
-dat <- read.ijdata(file, scale = 0.7812, unit = "um")
-multispot.raw <- convert.ijdata(dat)
-path <- file.path(system.file("extdata", package = "sclero"))
-multispot.size <- assign.size(multispot.raw, path = path)
-multispot <- spot.dist(multispot.size)
-@
+\begin{Schunk}
+\begin{Sinput}
+ file <- file.path(system.file("extdata", package = "sclero"), "multi_spotseq.zip")
+ dat <- read.ijdata(file, scale = 0.7812, unit = "um")
+ multispot.raw <- convert.ijdata(dat)
+ path <- file.path(system.file("extdata", package = "sclero"))
+ multispot.size <- assign.size(multispot.raw, path = path)
+ multispot <- spot.dist(multispot.size)
+\end{Sinput}
+\end{Schunk}
 
 \begin{figure}[H]
 \begin{center}
-<<label=multispot,fig = TRUE,include=TRUE, width = 10, height = 3.5>>=
-plot(multispot, spot.size = "actual")
-@
+\begin{Schunk}
+\begin{Sinput}
+ plot(multispot, spot.size = "actual")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{sclero_tutorial-multispot}
 \end{center}
 \caption{A sample spot sequences with multiple sequences become aligned independently of each other.}
 \end{figure}
