@@ -35,10 +35,9 @@ shellvalues.aligned <- spot.dist(shellvalues)
 plot(shellvalues.aligned, spot.size = "actual", spot.type = "idvalue", 
 spot.color = "darkgrey", highlight.gbs = c("WG_start", "WG_end"))
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{read.ijdata}} \code{\link{spot.dist}} \code{\link{assign.size}} \code{\link{plot.rawDist}}
 }
-
+\author{
+Mikko Vihtakari
+}

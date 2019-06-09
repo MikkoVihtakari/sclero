@@ -4,10 +4,12 @@
 \alias{convert.ijdata}
 \title{Convert IJDATA object to a list of spatstat objects}
 \usage{
-convert.ijdata(X)
+convert.ijdata(X, Accuracy = 0.1)
 }
 \arguments{
 \item{X}{an \code{\link[=read.ijdata]{IJDATA}} object to be converted.}
+
+\item{Accuracy}{numeric value defining the number to round to. See \code{\link{round_any}}.}
 }
 \value{
 Returns a list of class \code{rawDist}, which contains \link[spatstat]{spatstat} point patterns. The returned \code{rawDist} can be plotted using the generic plotting command.
@@ -20,9 +22,6 @@ data(shellspots)
 shell_map <- convert.ijdata(shellspots)
 plot(shell_map)
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{read.ijdata}} for generating \code{IJDATA} objects.
 
@@ -30,4 +29,6 @@ Mikko Vihtakari
 
 \code{\link{spot.dist}} for aligning sample spots.
 }
-
+\author{
+Mikko Vihtakari
+}

@@ -4,8 +4,8 @@
 \alias{assign.size}
 \title{Assign spot sizes to 'rawDist' objects for estimating spatial extent of sample averaging error.}
 \usage{
-assign.size(rawDist, file = NULL, path = NULL, names = "generate.invalid",
-  types = c("oval", "freehand", "rect"))
+assign.size(rawDist, file = NULL, path = NULL,
+  names = "generate.invalid", types = c("oval", "freehand", "rect"))
 }
 \arguments{
 \item{rawDist}{\code{\link[=convert.ijdata]{rawDist}} object to which the values should be assigned.}
@@ -34,10 +34,9 @@ path <- file.path(system.file("extdata", package = "sclero"))
 sizes <- assign.size(shell, path = path)
 sizes$spot.area
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{read.ijdata}} \code{\link{spot.dist}} \code{\link{assign.value}} \code{\link{plot.spotDist}}
 }
-
+\author{
+Mikko Vihtakari
+}

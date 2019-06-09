@@ -19,10 +19,9 @@ Prints the order and names of columns in a \code{\link[base]{data.frame}}.
 dat <- data.frame(a = 1:10, b = 10:1)
 coln(dat)
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link[base]{data.frame}}, \code{\link[base]{colnames}}
 }
-
+\author{
+Mikko Vihtakari
+}

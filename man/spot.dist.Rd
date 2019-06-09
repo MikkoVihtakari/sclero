@@ -4,11 +4,17 @@
 \alias{spot.dist}
 \title{Distance of sampling spots from margin along a measurement axis}
 \usage{
-spot.dist(rawDist, sample.name = NULL, run.ae = TRUE,
-  use.centroids = TRUE)
+spot.dist(rawDist, coord.type = "scaled", sample.name = NULL,
+  run.ae = TRUE, use.centroids = TRUE)
 }
 \arguments{
 \item{rawDist}{a \code{\link[=convert.ijdata]{rawDist}} object for which the alignment should be done.}
+
+\item{coord.type}{A character or numeric argument defining the coordinate type to do the calculations on. Alternatives:
+\itemize{
+  \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
+  \item \strong{"original"} or any other character/number. Only original ImageJ ROI coordinates.
+}}
 
 \item{sample.name}{An optional parameter over-riding the sample name. If \code{NULL} (default), the sample name will be passed from the previous steps (\code{\link{read.ijdata}}, \code{\link{convert.ijdata}})}
 
@@ -39,9 +45,6 @@ shell_map <- convert.ijdata(shellspots)
 x <- spot.dist(shell_map)
 plot(x) 
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{read.ijdata}} for reading zip files containing ImageJ ROIs.
 
@@ -53,4 +56,6 @@ Mikko Vihtakari
 
 \code{\link{print.spotDist}} for printing.
 }
-
+\author{
+Mikko Vihtakari
+}

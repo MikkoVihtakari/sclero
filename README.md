@@ -8,8 +8,7 @@ Installation of the GitHub version
 -------
 Using the *devtools* package:
 ```{r}
-library(devtools)
-install_github("MikkoVihtakari/sclero", dependencies = TRUE)
+devtools::install_github("MikkoVihtakari/sclero")
 ```
 
 User Manual
@@ -34,3 +33,7 @@ The *sclero* package depends on:
 [doc]: https://github.com/MikkoVihtakari/sclero/tree/master/inst/doc
 [vignettes]: https://github.com/MikkoVihtakari/sclero/tree/master/vignettes
 [thesis]: http://hdl.handle.net/10037/7152
+
+News
+-------
+2019-06-03 Update to a new major version, which is still developmental. Added growth measurement and edited most underlying functions. Might have broken something. For test use only. 

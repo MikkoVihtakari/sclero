@@ -34,12 +34,11 @@ dat2 <- order.ijdata(shellspots, gbs = 1:13)
 ## Length of gbs does not correspond the number of columns. Data removed.
 order.ijdata(dat2, print.order = TRUE)
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{read.ijdata}} for reading zip files containing ImageJ ROIs.
 
 \code{\link{convert.ijdata}} for converting the coordinate information to \link[spatstat]{spatstat} point patterns.
 }
-
+\author{
+Mikko Vihtakari
+}

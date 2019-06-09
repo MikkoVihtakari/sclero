@@ -1,17 +1,17 @@
-\contentsline {section}{\numberline {1}Short introduction to the package}{2}{section.1}
-\contentsline {subsection}{\numberline {1.1}Installation}{2}{subsection.1.1}
-\contentsline {subsection}{\numberline {1.2}Features}{2}{subsection.1.2}
-\contentsline {section}{\numberline {2}Aligning sample spots with growth lines}{3}{section.2}
-\contentsline {subsection}{\numberline {2.1}Prerequisites for sample spot alignment}{4}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Mark sample spots and growth lines in ImageJ}{5}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Reading ImageJ zip files containing ROI objects}{7}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}Aligning sample spots}{9}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}\texttt {spot.dist} settings}{12}{subsubsection.2.4.1}
-\contentsline {subsubsection}{\numberline {2.4.2}\texttt {spot.dist} troubleshooting}{13}{subsubsection.2.4.2}
-\contentsline {subsection}{\numberline {2.5}Estimating spatial averaging error of sample spots}{14}{subsection.2.5}
-\contentsline {subsubsection}{\numberline {2.5.1}Add sample spot size information in ImageJ}{14}{subsubsection.2.5.1}
-\contentsline {subsubsection}{\numberline {2.5.2}Calculating shell spot size and maximum extent along distance axis}{15}{subsubsection.2.5.2}
-\contentsline {subsection}{\numberline {2.6}Generating sample maps}{17}{subsection.2.6}
-\contentsline {subsection}{\numberline {2.7}Aligning multiple sample spot sequences}{19}{subsection.2.7}
-\contentsline {section}{\numberline {3}Graphics used in the \textit {sclero}\xspace package}{20}{section.3}
-\contentsline {section}{\numberline {4}Dependencies}{20}{section.4}
+\contentsline {section}{\numberline {1}Short introduction to the package}{2}{section.1}% 
+\contentsline {subsection}{\numberline {1.1}Installation}{2}{subsection.1.1}% 
+\contentsline {subsection}{\numberline {1.2}Features}{2}{subsection.1.2}% 
+\contentsline {section}{\numberline {2}Aligning sample spots with growth lines}{3}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Prerequisites for sample spot alignment}{4}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.2}Mark sample spots and growth lines in ImageJ}{5}{subsection.2.2}% 
+\contentsline {subsection}{\numberline {2.3}Reading ImageJ zip files containing ROI objects}{7}{subsection.2.3}% 
+\contentsline {subsection}{\numberline {2.4}Aligning sample spots}{9}{subsection.2.4}% 
+\contentsline {subsubsection}{\numberline {2.4.1}\texttt {spot.dist} settings}{12}{subsubsection.2.4.1}% 
+\contentsline {subsubsection}{\numberline {2.4.2}\texttt {spot.dist} troubleshooting}{13}{subsubsection.2.4.2}% 
+\contentsline {subsection}{\numberline {2.5}Estimating spatial averaging error of sample spots}{14}{subsection.2.5}% 
+\contentsline {subsubsection}{\numberline {2.5.1}Add sample spot size information in ImageJ}{14}{subsubsection.2.5.1}% 
+\contentsline {subsubsection}{\numberline {2.5.2}Calculating shell spot size and maximum extent along distance axis}{15}{subsubsection.2.5.2}% 
+\contentsline {subsection}{\numberline {2.6}Generating sample maps}{17}{subsection.2.6}% 
+\contentsline {subsection}{\numberline {2.7}Aligning multiple sample spot sequences}{19}{subsection.2.7}% 
+\contentsline {section}{\numberline {3}Graphics used in the \textit {sclero}\xspace package}{20}{section.3}% 
+\contentsline {section}{\numberline {4}Dependencies}{20}{section.4}% 

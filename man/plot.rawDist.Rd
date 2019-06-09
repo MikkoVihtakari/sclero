@@ -4,15 +4,23 @@
 \alias{plot.rawDist}
 \title{Plot rawDist object}
 \usage{
-\method{plot}{rawDist}(x, ..., sample.name = "keep", spot.type = "id",
-  spot.size = 2, spot.color = NULL, main.type = "all",
-  color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias =
-  1)(100), highlight.gbs = NULL, highlight.col = "red")
+\method{plot}{rawDist}(X, ..., coord.type = "scaled",
+  sample.name = "keep", spot.type = "id", spot.size = 2,
+  spot.color = NULL, main.type = "all", growth.axis = "blue",
+  color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"),
+  bias = 1)(100), highlight.gbs = NULL, highlight.col = "red")
 }
 \arguments{
-\item{x}{\code{\link[=convert.ijdata]{rawDist}} object}
+\item{X}{\code{\link[=convert.ijdata]{rawDist}} object}
 
 \item{...}{Arguments to be passed to other methods, such as \link[=par]{graphical parameters}.}
+
+\item{coord.type}{A character or numeric argument defining the coordinate type to plot. Alternatives:
+\itemize{
+  \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
+  \item \strong{"original"} or \strong{2}. Only original ImageJ ROI coordinates.
+  \item \strong{"both"} or any other character/integer. Both coordinates side by side.
+}}
 
 \item{sample.name}{A character argument specifying the sample name to be plotted as an overall title for the plot (\code{\link[=plot.default]{main}}). Defaults to \code{"keep"} meaning that the sample name will be extracted from the \code{\link[=convert.ijdata]{rawDist}} object. The plot title can be omitted by specifying \code{sample.name = NULL}.}
 
@@ -23,6 +31,8 @@
 \item{spot.color}{A vector with equal length to number of spot sequences defining the color of sample spot labels. If \code{NULL} (default) a preset set of colors will be used.}
 
 \item{main.type}{A character argument with four possible levels (\code{"all"}, \code{"axis"}, \code{"ends"}, and \code{"none"}) indicating how the distance / main axis should be plotted. Defaults to \code{"all"} indicating that both the main axis and end points should be plotted. If \code{"axis"} only the main axis will be plotted. If \code{"ends"} only the end points will be plotted, and if \code{"none"} the main axis intormation will not be plotted.}
+
+\item{growth.axis}{character defining the color of the growth axis. Set to \code{NULL} to remove the growth axis.}
 
 \item{color.palette}{color palette used for "value" and "idvalue" \code{spot.type} options. Passed to \code{\link[grDevices]{colorRampPalette}}.}
 
@@ -44,11 +54,8 @@ shell_map <- convert.ijdata(shellspots)
 plot(shell_map)
 
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
-\code{\link{convert.ijdata}} for converting the coordinate information to \link[spatstat]{spatstat} point patterns. 
+\code{\link{convert.ijdata}} for converting the coordinate information to \link[spatstat]{spatstat} point patterns.
 
 \code{\link{read.ijdata}} for reading zip files containing ImageJ ROIs.
 
@@ -56,4 +63,6 @@ Mikko Vihtakari
 
 \code{\link[=plot]{plot.default}} and other methods; \code{\link[=points]{points}}, \code{\link[=lines]{lines}}, \code{\link[=par]{par}}.
 }
-
+\author{
+Mikko Vihtakari
+}

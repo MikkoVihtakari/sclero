@@ -6,9 +6,9 @@
 \usage{
 \method{plot}{spotDist}(x, ..., sample.name = "keep", spot.type = "id",
   spot.size = 2, spot.color = NULL, main.type = "all",
-  color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias =
-  1)(100), highlight.gbs = NULL, highlight.col = "red",
-  crossing.points = FALSE)
+  growth.axis = NULL, color.palette = colorRampPalette(c("blue",
+  "cyan", "yellow", "red"), bias = 1)(100), highlight.gbs = NULL,
+  highlight.col = "red", crossing.points = FALSE)
 }
 \arguments{
 \item{x}{\code{\link[=spot.dist]{spotDist}} object}
@@ -25,6 +25,8 @@
 
 \item{main.type}{A character argument with four possible levels (\code{"all"}, \code{"axis"}, \code{"ends"}, and \code{"none"}) indicating how the distance / main axis should be plotted. Defaults to \code{"all"} indicating that both the main axis and end points should be plotted. If \code{"axis"} only the main axis will be plotted. If \code{"ends"} only the end points will be plotted, and if \code{"none"} the main axis intormation will not be plotted.}
 
+\item{growth.axis}{character defining the color of the growth axis. Set to \code{NULL} to remove the growth axis.}
+
 \item{color.palette}{color palette used for "value" and "idvalue" \code{spot.type} options. Passed to \code{\link[grDevices]{colorRampPalette}}.}
 
 \item{highlight.gbs}{A character vector specifying the names of growth bands to be highlighted (i.e. colored with a different color than "darkgrey"). If \code{NULL} (default) all growth bands will be drawn using the standard color.}
@@ -32,6 +34,13 @@
 \item{highlight.col}{A character argument specifying the color to be used in growth band highlighting (\code{highlight.gbs}).}
 
 \item{crossing.points}{Indicates whether the crossing points between sampling spot sequence traverses and growth lines should be plotted. Defaults to FALSE.}
+
+\item{coord.type}{A character or numeric argument defining the coordinate type to plot. Alternatives:
+\itemize{
+  \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
+  \item \strong{"original"} or \strong{2}. Only original ImageJ ROI coordinates.
+  \item \strong{"both"} or any other character/integer. Both coordinates side by side.
+}}
 }
 \description{
 Plots a map of \code{\link[=spot.dist]{spotDist}} object.
@@ -47,9 +56,6 @@ shell_map <- convert.ijdata(shellspots)
 x <- spot.dist(shell_map)
 plot(x) 
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{spot.dist}} for aligning sample spots.
 
@@ -61,4 +67,6 @@ Mikko Vihtakari
 
 \code{\link[=plot]{plot.default}} and other methods; \code{\link[=points]{points}}, \code{\link[=lines]{lines}}, \code{\link[=par]{par}}.
 }
-
+\author{
+Mikko Vihtakari
+}

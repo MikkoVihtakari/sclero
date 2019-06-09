@@ -12,4 +12,3 @@ data(barium)
 Barium to calcium ratios for sample spots in shellspots dataset
 }
 \keyword{datasets}
-

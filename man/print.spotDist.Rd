@@ -14,10 +14,9 @@
 \description{
 \code{\link{print}} function for \code{\link[=spot.dist]{spotDist}} objects
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{spot.dist}}
 }
-
+\author{
+Mikko Vihtakari
+}

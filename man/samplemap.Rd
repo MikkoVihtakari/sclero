@@ -4,7 +4,8 @@
 \alias{samplemap}
 \title{Common plotting function for plot.rawDist and plot.spotDist functions}
 \usage{
-samplemap(x, ..., sname, sptype, size, scol, mtype, colpalette, hlight, hlcol)
+samplemap(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalette,
+  hlight, hlcol)
 }
 \arguments{
 \item{x}{\link[=convert.ijdata]{rawDist}} or \code{\link[=spot.dist]{spotDist} object.}
@@ -21,6 +22,8 @@ samplemap(x, ..., sname, sptype, size, scol, mtype, colpalette, hlight, hlcol)
 
 \item{mtype}{equals to \code{\link[=plot.rawDist]{main.type}}}
 
+\item{gaxis}{equals to \code{\link[=plot.rawDist]{growth.axis}}}
+
 \item{colpalette}{equals to \code{\link[=plot.rawDist]{color.palette}}}
 
 \item{hlight}{equals to \code{\link[=plot.rawDist]{highlight.gbs}}}
@@ -30,10 +33,10 @@ samplemap(x, ..., sname, sptype, size, scol, mtype, colpalette, hlight, hlcol)
 \description{
 Used as an internal function to make the code more comprehensible. See \code{\link{plot.rawDist}} and \code{\link{plot.spotDist}} for plotting \code{\link[=convert.ijdata]{rawDist}} and \code{\link[=spot.dist]{spotDist}} objects, respectively.
 }
-\author{
-Mikko Vihtakari
-}
 \seealso{
 \code{\link{plot.rawDist}}, \code{\link{plot.spotDist}}
 }
-
+\author{
+Mikko Vihtakari
+}
+\keyword{internal}

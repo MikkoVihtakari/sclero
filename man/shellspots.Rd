@@ -23,4 +23,3 @@ data(shellspots)
 Coordinates of sample spots and growth lines along a bivalve mollusk shell section
 }
 \keyword{datasets}
-
