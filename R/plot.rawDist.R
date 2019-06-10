@@ -60,7 +60,7 @@ if(!all(names(X) %in% c("scaled", "original"))) {
 
 } else {
 
-  if(sample.name == "keep") sample.name = x$scaled$sample.name
+  if(sample.name == "keep") sample.name <- X$scaled$sample.name
 
   par(mfrow = c(1, 2), cex.main = 0.8, mar=c(2.5,2.5,1,1))
 

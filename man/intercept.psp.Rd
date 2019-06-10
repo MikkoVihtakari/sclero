@@ -7,7 +7,7 @@
 intercept.psp(x)
 }
 \arguments{
-\item{x}{a \code{\link[spatsta]{psp}} object}
+\item{x}{a \code{\link[spatstat]{psp}} object}
 }
 \value{
 Returns a numeric vector containing y-intercepts of line segments in the same order than \code{x}

@@ -41,9 +41,17 @@ assign.size <- function(rawDist, file = NULL, path = NULL, names = "generate.inv
                                         unitname = Z$unit
   )
   
+  # k <- spot.owins[[1]]
   spot.owins <- lapply(spot.owins, function(k) {
+    
     k <- rotate.owin(k, angle = pi - atan(Z$parameters$main.sl))
     k <- shift.owin(k, vec = c(Z$parameters$main.shift.x, Z$parameters$main.shift.y))
+    
+    if(any(k$xrange < 0)) {
+      k$xrange <- sort(-1*k$xrange)
+      k$bdry[[1]]$x <- rev(-1*k$bdry[[1]]$x)
+    }
+    
     k
   })
   

@@ -55,9 +55,9 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   start <- spatstat::ppp(x[1], y[1], marks = "start", window = owin)
   end <- spatstat::ppp(x[2], y[2], marks = "end", window = owin)
   
-  main.sl <- slope.psp(main)
+  main.sl <- tan(spatstat::angles.psp(main))
   
-  main.rot <- rotate.psp(main, angle = pi - atan(main.sl))  ### Rotated main axis
+  main.rot <- spatstat::rotate.psp(main, angle = pi - atan(main.sl))  ### Rotated main axis
   main.shift.x <- -main.rot$ends$x0
   main.shift.y <- -main.rot$ends$y0
   
@@ -81,7 +81,12 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     
     spots.rot <- lapply(spots, function(k) {
       rot <- rotate.ppp(k, angle = pi - atan(main.sl))
-      shift.ppp(rot, vec = c(main.shift.x, main.shift.y))
+      rot <- shift.ppp(rot, vec = c(main.shift.x, main.shift.y))
+      
+      if(any(rot$x < 0)) { # Make x-coordinates positive for slope = 0 cases
+        rot$x <- abs(rot$x)
+      }
+      rot  
     })
     
   }
@@ -117,8 +122,12 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   
   marks(gbs) <- factor(marks(gbs)[[1]], unique(marks(gbs)[[1]]))
   
-  gbs.rot <- rotate.psp(gbs, angle = pi - atan(main.sl)) ### Rotated growth lines
-  gbs.rot <- shift.psp(gbs.rot, vec = c(main.shift.x, main.shift.y)) ### Shift growth lines
+  gbs.rot <- spatstat::rotate.psp(gbs, angle = pi - atan(main.sl)) ### Rotated growth lines
+  gbs.rot <- spatstat::shift.psp(gbs.rot, vec = c(main.shift.x, main.shift.y)) ### Shift growth lines
+  
+  if(any(gbs.rot$ends[c("x0", "x1")] < 0)) { # Make x-coordinates positive for slope = 0 cases
+    gbs.rot$ends[c("x0", "x1")] <- abs(gbs.rot$ends[c("x0", "x1")])
+  }
   
   ## 5. Growth axis ###
   
@@ -137,6 +146,10 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     
     growth.rot <- rotate.psp(growth, angle = pi - atan(main.sl)) ### Rotated growth axis
     growth.rot <- shift.psp(growth.rot, vec = c(main.shift.x, main.shift.y)) ### Shift growth axis
+    
+    if(any(c(growth.rot$ends[c("x0", "x1")]) < 0)) { # Make x-coordinates positive for slope = 0 cases
+        growth.rot$ends[c("x0", "x1")] <- abs(growth.rot$ends[c("x0", "x1")])
+      }
   }
   
   ## 6. Clean up the rotated coordinates, which will be used as main coordinates from now on ####
@@ -159,7 +172,11 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     }
   }
   
-  main.rot <- shift.psp(main.rot, vec = c(main.shift.x, main.shift.y)) ## Shift to the main axis begin from start
+  main.rot <- spatstat::shift.psp(main.rot, vec = c(main.shift.x, main.shift.y)) ## Shift to the main axis begin from start
+  
+  if(any(c(main.rot$ends[c("x0", "x1")]) < 0)) { # Make x-coordinates positive for slope = 0 cases
+    main.rot$ends[c("x0", "x1")] <- abs(main.rot$ends[c("x0", "x1")])
+  }
   
   tmp <- lapply(list(main.rot, spots.rot, gbs.rot, growth.rot), function(k) {
     
@@ -194,11 +211,11 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   df <- 
     list(
       scaled = list(main = main.rot, gbs = gbs.rot, spots = spots.rot, growth = growth.rot,
-                    window = owin.rot, start.main = start.rot, end.main = end.rot, sample.name = X$sample.name,
-                    scaling.factor = X$scaling.factor, unit = X$unit, parameters = params),
+        window = owin.rot, start.main = start.rot, end.main = end.rot, sample.name = X$sample.name,
+        scaling.factor = X$scaling.factor, unit = X$unit, parameters = params),
       original = list(main = main, gbs = gbs, spots = spots, growth = growth, 
-                      window = owin, start.main = start, end.main = end, sample.name = X$sample.name,
-                      scaling.factor = X$scaling.factor, unit = X$unit, parameters = params)
+        window = owin, start.main = start, end.main = end, sample.name = X$sample.name,
+        scaling.factor = X$scaling.factor, unit = X$unit, parameters = params)
     )
   
   class(df) <- "rawDist"

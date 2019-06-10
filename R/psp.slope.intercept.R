@@ -11,7 +11,7 @@
 #' @export
 
 slope.psp <- function(x, orthogonal = FALSE) {
-  out <- tan(angles.psp(x))
+  out <- tan(spatstat::angles.psp(x))
   
   if(orthogonal) {
     -1/out
@@ -22,7 +22,7 @@ slope.psp <- function(x, orthogonal = FALSE) {
 
 #' @title Calculate intercept for a spatstat psp object
 #' @description Calculates an intercept for each line segment in a psp object
-#' @param x a \code{\link[spatsta]{psp}} object
+#' @param x a \code{\link[spatstat]{psp}} object
 #' @return Returns a numeric vector containing y-intercepts of line segments in the same order than \code{x}
 #' @details The function assumes that each line segment has an infinite domain and follows the line equation $y = slope * x + intercept$.
 #' @keywords internal
@@ -30,7 +30,7 @@ slope.psp <- function(x, orthogonal = FALSE) {
 #' @export
 
 intercept.psp <- function(x) {
-  x$ends$y0 - tan(angles.psp(x)) * x$ends$x0
+  x$ends$y0 - tan(spatstat::angles.psp(x)) * x$ends$x0
 }
 
 #' @title Find points that lie along line based on x- or y coordinates
