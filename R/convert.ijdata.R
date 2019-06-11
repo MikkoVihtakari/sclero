@@ -29,7 +29,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     }
   })
   
-  range.x <- c(round_any(do.call("min", tmp), Accuracy, floor), round_any(do.call("max", tmp), Accuracy, ceiling))
+  range.x <- c(plyr::round_any(do.call("min", tmp), Accuracy, floor), plyr::round_any(do.call("max", tmp), Accuracy, ceiling))
   
   tmp <- lapply(c("main.y", "spots.y", "gbs.y", "growth.y"), function(i) {
     if(is.null(X[[i]])) {
@@ -43,7 +43,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   
   owin <- spatstat::owin(xrange = range.x, yrange =  range.y, unitname = X$unit)
   
-  ## 2. Main axis ###
+  ## 2. Main axis ####
   
   x <- X$main.x
   x <- x[!is.na(x)]
@@ -61,7 +61,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   main.shift.x <- -main.rot$ends$x0
   main.shift.y <- -main.rot$ends$y0
   
-  ## 3. Spots ###
+  ## 3. Spots ####
   
   if(is.na(X$parameters$spot.rois)) {
     
@@ -91,7 +91,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     
   }
   
-  ## 4. Growth lines ###
+  ## 4. Growth lines ####
   
   x <- X$gbs.x
   y <- X$gbs.y
@@ -129,7 +129,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     gbs.rot$ends[c("x0", "x1")] <- abs(gbs.rot$ends[c("x0", "x1")])
   }
   
-  ## 5. Growth axis ###
+  ## 5. Growth axis ####
   
   if(is.null(X$growth.x)) {
     growth <- NULL
@@ -147,7 +147,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     growth.rot <- rotate.psp(growth, angle = pi - atan(main.sl)) ### Rotated growth axis
     growth.rot <- shift.psp(growth.rot, vec = c(main.shift.x, main.shift.y)) ### Shift growth axis
     
-    if(any(c(growth.rot$ends[c("x0", "x1")]) < 0)) { # Make x-coordinates positive for slope = 0 cases
+    if(any(growth.rot$ends[c("x0", "x1")] < 0)) { # Make x-coordinates positive for slope = 0 cases
         growth.rot$ends[c("x0", "x1")] <- abs(growth.rot$ends[c("x0", "x1")])
       }
   }

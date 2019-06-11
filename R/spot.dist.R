@@ -89,7 +89,7 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
     
     # Calculate shortest distance from each hole to the 1st growth line (l.1st, when the clam died, margin). Called start here because photographs should be marked against direction of growth.
     
-    tmp <- lapply(spots, function(x) nncross(x, l.1st)[,1]) 
+    tmp <- lapply(spots, function(x) spatstat::nncross(x, l.1st)[,1]) 
     d <- mapply(`[<-`, d, "dist.1st", value = tmp, SIMPLIFY = FALSE)
     
     # Calculate the closest point along the closest growth line ($close1) for each hole. Then calculate the distance from this point to the 1st growth line (l.1st). This distance is called dist.cross. If the logic behind this is hard to grasp, try plotting 'tmp' after project2segment part.
@@ -196,8 +196,12 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
   
   ## Part 1.2 Test whether the object is 'along' or 'cross' type (see the tutorial)
   test <- crossing.psp(main, superimpose(gbs))
-  if(test$n == 0){type <- "along"} else {
-    if(test$n == length(unique(gbs$marks))){type <- "cross"} else {
+  if(test$n == 0) {
+    type <- "along"
+  } else {
+    if(test$n == length(unique(gbs$marks))) {
+      type <- "cross"
+    } else {
       stop(paste0("Number of growth line and main axis crossing points is neither 0 or ", length(unique(gbs$marks)), ". Cannot define the aligment type. See ?spot.dist"))
     }
   }
@@ -429,4 +433,5 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
   x$output <- output
   class(x) <- "spotDist"
   
-  return(x)}
+  return(x)
+}
