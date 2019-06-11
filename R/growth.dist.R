@@ -25,7 +25,7 @@
 #' @import spatstat plyr
 #' @export
 
-# sample.name = NULL; coord.type = "scaled"
+# coord.type = "scaled"
 growth.dist <- function(rawDist, coord.type = "scaled") {
 
   ## Read in the data ####
@@ -70,7 +70,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
     }
   }
 
-  ## Part 1.3 Define start and endpoint for measurements
+  ## Part 1.3 Define start and endpoint for measurements ###
 
   if(sec.type == "cross") {
 
@@ -94,7 +94,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
   }
 
 
-  ## Part 2 Manual growth axis ####
+  ## Part 2 Manual growth axis ###
 
   if(sec.type == "cross") {
 
@@ -172,7 +172,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
     dat.cal$cal.pr <- 100*dat.cal$cal/sum(dat.cal$cal)
   }
 
-  ## Part 4 Minimum distance ####
+  ## Part 4 Minimum distance ###
 
   if(sec.type == "cross") {
 
@@ -211,7 +211,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   }
 
-  ## Part 5 Guided minimum distance ####
+  ## Part 5 Guided minimum distance ###
 
   if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1)) {
     for(i in 2:(nlevels(spatstat::marks(gbs.all)))) {
@@ -331,7 +331,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   }
 
-  ## Part 6 Maximum distances ####
+  ## Part 6 Maximum distances ###
 
   if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1)) {
 
@@ -482,7 +482,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
           window = window)
       }
 
-      ## ####
+      ## ###
 
       list(maxx1 = maxx1, maxx2 = maxx2, maxcp = maxcp, maxg = maxg)
     })
@@ -523,7 +523,8 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
   dat <- dat[order(dat$id),]
   rownames(dat) <- 1:nrow(dat)
 
-  out <- list(data = dat, growth.axes = list(
+  out <- list(rawDist = rawDist[[coord.type]], 
+    growthDist = list(data = dat, growth.axes = list(
     main = growth.main,
     manual = get0("growth.man"),
     caliber = get0("growth.cal"),
@@ -534,7 +535,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
     minimum = get0("growth.min"),
     guided.minimum = get0("growth.ming"),
     direct = get0("growth.dire")
-    ))
+    )))
 
   class(out) <- "growthDist"
   return(out)
