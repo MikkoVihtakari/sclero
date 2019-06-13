@@ -27,7 +27,7 @@ plot.growthDist <- function(X, ..., growth.types = NULL, sample.name = "keep", m
   
   ## Plot the sample map
   
-  output <- samplemap(x = X$rawDist, ..., sname = sample.name, sptype = "id", size = 2, scol = NULL, mtype = main.type, gaxis = "blue", colpalette = NULL, hlight = highlight.gbs, hlcol = highlight.col)
+  output <- samplemap(x = X$rawDist, ..., sname = sample.name, sptype = "id", size = 2, scol = NULL, mtype = main.type, gaxis = NULL, colpalette = NULL, hlight = highlight.gbs, hlcol = highlight.col)
   
   ## Growth axes
   gaxes <- Filter(Negate(is.null), X$growthDist$growth.axes)

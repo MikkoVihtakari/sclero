@@ -20,7 +20,7 @@
 #' @export
 #' 
 
-# rawDist = shell; file = "shellspots.zip"; path = path; names = "generate.invalid"; types = c("oval", "freehand", "rect")
+# rawDist = shell; file = NULL; path = path; names = "generate.invalid"; types = c("oval", "freehand", "rect")
 assign.size <- function(rawDist, file = NULL, path = NULL, names = "generate.invalid", types = c("oval", "freehand", "rect")){
   
   ## ####
@@ -36,9 +36,9 @@ assign.size <- function(rawDist, file = NULL, path = NULL, names = "generate.inv
   X <- RImageJROI::read.ijzip(file.path(path,file), names = TRUE)
   
   spot.owins <- RImageJROI::ij2spatstat(X, 
-                                        convert.only = types, 
-                                        scale = Z$scaling.factor, 
-                                        unitname = Z$unit
+    convert.only = types, 
+    scale = Z$scaling.factor, 
+    unitname = Z$unit
   )
   
   # k <- spot.owins[[1]]
@@ -47,12 +47,34 @@ assign.size <- function(rawDist, file = NULL, path = NULL, names = "generate.inv
     k <- rotate.owin(k, angle = pi - atan(Z$parameters$main.sl))
     k <- shift.owin(k, vec = c(Z$parameters$main.shift.x, Z$parameters$main.shift.y))
     
-    if(any(k$xrange < 0)) {
+    if(Z$parameters$refl.x & Z$parameters$refl.y) {
+      
+      k$xrange <- sort(-1*k$xrange)
+      k$bdry[[1]]$x <- -1*k$bdry[[1]]$x
+      k$yrange <- sort(-1*k$yrange)
+      k$bdry[[1]]$y <- -1*k$bdry[[1]]$y
+  
+    } else if(Z$parameters$refl.x) {
+      
       k$xrange <- sort(-1*k$xrange)
       k$bdry[[1]]$x <- rev(-1*k$bdry[[1]]$x)
+      
+    } else if(Z$parameters$refl.y) {
+      
+      k$yrange <- sort(-1*k$yrange)
+      k$bdry[[1]]$y <- rev(-1*k$bdry[[1]]$y)
+      
     }
     
     k
+    
+    # ## Debug plotting for k, ignore
+    # tmp <- data.frame(x = k$bdry[[1]]$x, y = k$bdry[[1]]$y, id = seq_along(k$bdry[[1]]$x))
+    # ggplot2::ggplot(tmp, ggplot2::aes(x = x, y = y, label = id,color = as.numeric(id))) + 
+    #   ggplot2::geom_path() + 
+    #   ggplot2::geom_text(size = 2) + 
+    #   ggplot2::scale_color_distiller(palette = "Spectral")
+    # 
   })
   
   ## 2. Relate the spot areas with sample spots  ####
@@ -82,11 +104,11 @@ assign.size <- function(rawDist, file = NULL, path = NULL, names = "generate.inv
     areas <- unlist(lapply(spot.owins[tmp], function(k) spatstat::area.owin(k)))
     diams <- unlist(lapply(spot.owins[tmp], function(k) spatstat::diameter(k)))
     spatstat::hyperframe(spot = tmp.dt$spot.mark, 
-                         dist2spot = tmp.dt$dist, 
-                         spot.owin.name = tmp.dt$owin.name, 
-                         spot.owins = spot.owins[tmp], 
-                         spot.area = areas, 
-                         spot.diameter = diams)
+      dist2spot = tmp.dt$dist, 
+      spot.owin.name = tmp.dt$owin.name, 
+      spot.owins = spot.owins[tmp], 
+      spot.area = areas, 
+      spot.diameter = diams)
   })
   
   names(out) <- names(Z$spots)

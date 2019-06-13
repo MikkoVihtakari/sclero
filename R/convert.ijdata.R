@@ -43,7 +43,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   
   owin <- spatstat::owin(xrange = range.x, yrange =  range.y, unitname = X$unit)
   
-  ## 2. Main axis ####
+  ## 2. Main axis ###
   
   x <- X$main.x
   x <- x[!is.na(x)]
@@ -61,37 +61,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   main.shift.x <- -main.rot$ends$x0
   main.shift.y <- -main.rot$ends$y0
   
-  ## 3. Spots ####
-  
-  if(is.na(X$parameters$spot.rois)) {
-    
-    spots <- NULL
-    spots.rot <- NULL
-    
-  } else {
-    spots <- lapply(1:ncol(X$spots.x), function(i) {
-      x <- na.omit(X$spots.x[,i])
-      y <- na.omit(X$spots.y[,i])
-      spatstat::ppp(x, y, marks = as.factor(seq(1, length(x))), window = owin)
-    })
-    
-    names(spots) <- colnames(X$spots.x)
-    
-    ### Rotated and shifted spots
-    
-    spots.rot <- lapply(spots, function(k) {
-      rot <- rotate.ppp(k, angle = pi - atan(main.sl))
-      rot <- shift.ppp(rot, vec = c(main.shift.x, main.shift.y))
-      
-      if(any(rot$x < 0)) { # Make x-coordinates positive for slope = 0 cases
-        rot$x <- abs(rot$x)
-      }
-      rot  
-    })
-    
-  }
-  
-  ## 4. Growth lines ####
+  ## 3. Growth lines ###
   
   x <- X$gbs.x
   y <- X$gbs.y
@@ -125,11 +95,55 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   gbs.rot <- spatstat::rotate.psp(gbs, angle = pi - atan(main.sl)) ### Rotated growth lines
   gbs.rot <- spatstat::shift.psp(gbs.rot, vec = c(main.shift.x, main.shift.y)) ### Shift growth lines
   
-  if(any(gbs.rot$ends[c("x0", "x1")] < 0)) { # Make x-coordinates positive for slope = 0 cases
-    gbs.rot$ends[c("x0", "x1")] <- abs(gbs.rot$ends[c("x0", "x1")])
+  ### Reflect around axes 
+  
+  refl.x <- sum(gbs.rot$ends$x1 < 0) > sum(gbs.rot$ends$x1 > 0) # Reflect around y-axis if more negative than positive x values 
+  refl.y <- sum(gbs.rot$ends$y1 < 0) > sum(gbs.rot$ends$y1 > 0) # Reflect around x-axis if more negative than positive y values 
+  
+  if(refl.x) { 
+    gbs.rot$ends[c("x0", "x1")] <- -1*gbs.rot$ends[c("x0", "x1")]
   }
   
-  ## 5. Growth axis ####
+  if(refl.y) { 
+    gbs.rot$ends[c("y0", "y1")] <- -1*gbs.rot$ends[c("y0", "y1")]
+  }
+  
+  ## 4. Sample spots ###
+  
+  if(is.na(X$parameters$spot.rois)) {
+    
+    spots <- NULL
+    spots.rot <- NULL
+    
+  } else {
+    spots <- lapply(1:ncol(X$spots.x), function(i) {
+      x <- na.omit(X$spots.x[,i])
+      y <- na.omit(X$spots.y[,i])
+      spatstat::ppp(x, y, marks = as.factor(seq(1, length(x))), window = owin)
+    })
+    
+    names(spots) <- colnames(X$spots.x)
+    
+    ### Rotated and shifted spots
+    
+    spots.rot <- lapply(spots, function(k) {
+      rot <- rotate.ppp(k, angle = pi - atan(main.sl))
+      rot <- shift.ppp(rot, vec = c(main.shift.x, main.shift.y))
+      
+      if(refl.x) { # Reflect around y-axis if more negative than positive x values 
+        rot$x <- -1*rot$x
+      }
+      
+      if(refl.y) { # Reflect around x-axis if more negative than positive y values 
+        rot$y <- -1*rot$y
+      }
+      
+      rot  
+    })
+    
+  }
+  
+  ## 5. Growth axis ###
   
   if(is.null(X$growth.x)) {
     growth <- NULL
@@ -147,12 +161,17 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
     growth.rot <- rotate.psp(growth, angle = pi - atan(main.sl)) ### Rotated growth axis
     growth.rot <- shift.psp(growth.rot, vec = c(main.shift.x, main.shift.y)) ### Shift growth axis
     
-    if(any(growth.rot$ends[c("x0", "x1")] < 0)) { # Make x-coordinates positive for slope = 0 cases
-        growth.rot$ends[c("x0", "x1")] <- abs(growth.rot$ends[c("x0", "x1")])
-      }
+    if(refl.x) { 
+      growth.rot$ends[c("x0", "x1")] <- -1*growth.rot$ends[c("x0", "x1")]
+    }
+    
+    if(refl.y) { 
+      growth.rot$ends[c("y0", "y1")] <- -1*growth.rot$ends[c("y0", "y1")]
+    }
+    
   }
   
-  ## 6. Clean up the rotated coordinates, which will be used as main coordinates from now on ####
+  ## 6. Clean up the rotated coordinates, which will be used as main coordinates from now on ###
   
   range.fun <- function(k) {
     if(is.null(k)) {
@@ -174,8 +193,12 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   
   main.rot <- spatstat::shift.psp(main.rot, vec = c(main.shift.x, main.shift.y)) ## Shift to the main axis begin from start
   
-  if(any(c(main.rot$ends[c("x0", "x1")]) < 0)) { # Make x-coordinates positive for slope = 0 cases
-    main.rot$ends[c("x0", "x1")] <- abs(main.rot$ends[c("x0", "x1")])
+  if(refl.x) { 
+    main.rot$ends[c("x0", "x1")] <- -1*main.rot$ends[c("x0", "x1")]
+  }
+  
+  if(refl.y) { 
+    main.rot$ends[c("y0", "y1")] <- -1*main.rot$ends[c("y0", "y1")]
   }
   
   tmp <- lapply(list(main.rot, spots.rot, gbs.rot, growth.rot), function(k) {
@@ -204,9 +227,9 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   ## Parameters
   
   params <- X$parameters
-  params <- c(params, main.sl = main.sl, main.shift.x = main.shift.x, main.shift.y = main.shift.y)
+  params <- c(params, main.sl = main.sl, main.shift.x = main.shift.x, main.shift.y = main.shift.y, refl.x = refl.x, refl.y = refl.y)
   
-  ## Return ----
+  ## Return ####
   
   df <- 
     list(
