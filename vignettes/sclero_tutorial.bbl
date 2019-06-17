@@ -1,0 +1,133 @@
+\begin{thebibliography}{15}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ambrose et~al.(2011)Ambrose, Renaud, Locke, Cottier, Berge, Carroll,
+  Levin, and Ryan]{Ambrose2012}
+W.~G. Ambrose, P.~E. Renaud, W.~L. Locke, F.~R. Cottier, J.~Berge, M.~L.
+  Carroll, B.~Levin, and S.~Ryan.
+\newblock {Growth line deposition and variability in growth of two circumpolar
+  bivalves (\textit{Serripes groenlandicus}, and \textit{Clinocardium
+  ciliatum})}.
+\newblock \emph{Polar Biol}, 35:\penalty0 345--354, 2011.
+\newblock URL \url{http://link.springer.com/10.1007/s00300-011-1080-4}.
+
+\bibitem[Baddeley and Turner(2005)]{Baddeley2005}
+A.~Baddeley and R.~Turner.
+\newblock {Spatstat: an R package for analyzing spatial point patterns}.
+\newblock \emph{J Stat Softw}, 12:\penalty0 1--42, 2005.
+\newblock URL \url{http://www.jstatsoft.org/v12/i06}.
+
+\bibitem[Beelaerts et~al.(2008)Beelaerts, Ridder, Schmitz, Bauwens, Dehairs,
+  Schoukens, and Pintelon]{Beelaerts2008}
+V.~Beelaerts, F.~Ridder, N.~Schmitz, M.~Bauwens, F.~Dehairs, J.~Schoukens, and
+  R.~Pintelon.
+\newblock {On the elimination of bias averaging-errors in proxy records}.
+\newblock \emph{Math Geosci}, 41:\penalty0 129--144, 2008.
+\newblock \doi{10.1007/s11004-008-9193-1}.
+\newblock URL
+  \url{http://www.springerlink.com/index/10.1007/s11004-008-9193-1}.
+
+\bibitem[Goodwin et~al.(2004)Goodwin, Flessa, Tellezduarte, Dettman,
+  Sch\"{o}ne, and Avilaserrano]{Goodwin2004}
+D.~Goodwin, K.~Flessa, M.~Tellezduarte, D.~Dettman, B.~R. Sch\"{o}ne, and
+  G.~Avilaserrano.
+\newblock {Detecting time-averaging and spatial mixing using oxygen isotope
+  variation: a case study}.
+\newblock \emph{Palaeogeogr Palaeoclimatol Palaeoecol}, 205:\penalty0 1--21,
+  2004.
+\newblock URL
+  \url{http://linkinghub.elsevier.com/retrieve/pii/S0031018203007521}.
+
+\bibitem[Masson-Delmotte et~al.(2013)Masson-Delmotte, Schulz, Abe-Ouchi, Beer,
+  Ganopolski, Rouco, Jansen, Lambeck, Luterbacher, Naish, Osborn,
+  Otto-Bliesner, Quinn, Ramesh, Rojas, Shao, and
+  Timmermann]{Masson-Delmotte2013}
+V.~Masson-Delmotte, M.~Schulz, A.~Abe-Ouchi, J.~Beer, A.~Ganopolski, J.~G.
+  Rouco, E.~Jansen, K.~Lambeck, J.~Luterbacher, T.~Naish, T.~Osborn,
+  B.~Otto-Bliesner, T.~Quinn, R.~Ramesh, M.~Rojas, X.~Shao, and A.~Timmermann.
+\newblock {Information from paleoclimate archives}.
+\newblock In T.~Stocker, D.~Qin, G.-K. Plattner, M.~Tignor, S.~Allen,
+  J.~Boschung, A.~Nauels, Y.~Xia, V.~Bex, and P.~Midgley, editors,
+  \emph{Climate Change 2013: The Physical Science Basis Contribution of Working
+  Group I to the Fifth Assessment Report of the Intergovernmental Panel on
+  Climate Change}, chapter~5, pages 383--464. Cambridge University Press,
+  Cambridge, UK and New York, NY, USA, 2013.
+
+\bibitem[Proctor et~al.(2000)Proctor, Baker, Barnes, and Gilmour]{Proctor2000}
+C.~J. Proctor, A.~Baker, W.~L. Barnes, and M.~A. Gilmour.
+\newblock {A thousand year speleothem proxy record of North Atlantic climate
+  from Scotland}.
+\newblock \emph{Clim Dyn}, 16:\penalty0 815--820, 2000.
+\newblock URL \url{http://link.springer.com/10.1007/s003820000077}.
+
+\bibitem[{R Core Team}(2019)]{R2014}
+{R Core Team}.
+\newblock {R: A language and environment for statistical computing. R
+  Foundation for Statistical Computing, Vienna, Austria}, 2019.
+\newblock URL \url{http://www.r-project.org}.
+
+\bibitem[Schneider et~al.(2012)Schneider, Rasband, and Eliceiri]{Schneider2012}
+C.~A. Schneider, W.~S. Rasband, and K.~W. Eliceiri.
+\newblock {NIH Image to ImageJ: 25 years of image analysis}.
+\newblock \emph{Nat Methods}, 9:\penalty0 671--675, 2012.
+\newblock URL \url{http://www.nature.com/doifinder/10.1038/nmeth.2089}.
+
+\bibitem[Sch\"{o}ne(2008)]{Schone2008}
+B.~R. Sch\"{o}ne.
+\newblock {The curse of physiology -- challenges and opportunities in the
+  interpretation of geochemical data from mollusk shells}.
+\newblock \emph{Geo-Marine Lett}, 28:\penalty0 269--285, 2008.
+\newblock URL \url{http://link.springer.com/10.1007/s00367-008-0114-6}.
+
+\bibitem[Sch\"{o}ne et~al.(2005)Sch\"{o}ne, Houk, {Freyre Castro}, Fiebig,
+  Oschmann, Kr\"{o}ncke, Dreyer, and Gosselck]{Schone2005a}
+B.~R. Sch\"{o}ne, S.~D. Houk, A.~D. {Freyre Castro}, J.~Fiebig, W.~Oschmann,
+  I.~Kr\"{o}ncke, W.~Dreyer, and F.~Gosselck.
+\newblock {Daily growth rates in shells of \textit{Arctica islandica}:
+  Assessing sub-seasonal environmental controls on a long-lived bivalve
+  mollusk}.
+\newblock \emph{Palaios}, 20:\penalty0 78--92, 2005.
+\newblock URL
+  \url{http://palaios.sepmonline.org/cgi/doi/10.2110/palo.2003.p03-101}.
+
+\bibitem[Sejr et~al.(2002)Sejr, Jensen, and Rysgaard]{Sejr2002}
+M.~K. Sejr, K.~T. Jensen, and S.~Rysgaard.
+\newblock {Annual growth bands in the bivalve \textit{Hiatella arctica}
+  validated by a mark-recapture study in NE Greenland}.
+\newblock \emph{Polar Biol}, 25:\penalty0 794--796, 2002.
+\newblock URL \url{http://dx.doi.org/10.1007/s00300-002-0413-8}.
+
+\bibitem[Sterratt and Vihtakari(2015)]{RImageJROI}
+D.~C. Sterratt and M.~Vihtakari.
+\newblock {RImageJROI: read ImageJ Region of Interest (ROI) files. R package
+  varsion 0.1.1}, 2015.
+\newblock URL \url{http://cran.r-project.org/package=RImageJROI}.
+
+\bibitem[Vihtakari(2014)]{Vihtakari2014}
+M.~Vihtakari.
+\newblock \emph{{Bivalves as indicators of environmental perturbations related
+  to climate and ocean acidification}}.
+\newblock Phd thesis, UiT The Arctic University of Norway, 2014.
+\newblock URL \url{http://hdl.handle.net/10037/7152}.
+
+\bibitem[Vihtakari et~al.(2016)Vihtakari, Renaud, Clarke, Whitehouse, Hop,
+  Carroll, and {Ambrose Jr}]{Vihtakari2016}
+M.~Vihtakari, P.~E. Renaud, L.~J. Clarke, M.~J. Whitehouse, H.~Hop, M.~L.
+  Carroll, and W.~G. {Ambrose Jr}.
+\newblock {Decoding the oxygen isotope signal for seasonal growth patterns in
+  Arctic bivalves}.
+\newblock \emph{Palaeogeogr Palaeoclimatol Palaeoecol}, 446:\penalty0 263--283,
+  2016.
+\newblock URL \url{http://dx.doi.org/10.1016/j.palaeo.2016.01.008}.
+
+\bibitem[Wickham(2011)]{Wickham2011}
+H.~Wickham.
+\newblock {The Split-Apply-Combine Strategy for Data Analysis}.
+\newblock \emph{J Stat Softw}, 40:\penalty0 1--29, 2011.
+\newblock URL \url{http://www.jstatsoft.org/v40/i01}.
+
+\end{thebibliography}

@@ -4,7 +4,7 @@
 % colored hyperlinks
 \usepackage[colorlinks=true,allcolors=blue]{hyperref}
 \usepackage{float}
-% Floats float too much. 
+% Floats float too much.
 \usepackage[section]{placeins}
 % Margin notes
 \usepackage{marginnote}
@@ -32,7 +32,7 @@
 \newcommand{\sclero}{\textit{sclero}\xspace}
 %%%
 %\VignetteIndexEntry{Align sampling spots in photographs}
-\title{Measure growth patterns and align sampling spots in photographs: \textit{sclero} tutorial}
+\title{Measure growth patterns and align sampling spots in photographs: \textit{sclero} tutorial \\[0.2em] \large R package version 0.3.4}
 \usepackage{Sweave}
 \begin{document}
 
@@ -55,63 +55,57 @@
 
 \section{Short introduction to the package}
 
-The \sclero package for \href{http://www.r-project.org}{R} \citep{R2014} provides tools to measure growth patterns and align sampling spots in chronologically deposited materials. The package is primarily intended for the fields of sclerochronology, geology, and dendrochronology, but the functions can also be applied for other image measuring tasks. The package is developed to interact with \href{http://imagej.nih.gov/ij/}{ImageJ} \citep{Schneider2012}, a free-to-use public domain software for image processing and analysis. As the \sclero package is developed for open source software, it is free to use and the code is modifiable by anyone interested. If these modifications are distributed in other packages or software, references to the original source (type \texttt{citation("sclero")} in R) and author(s) of the particular function are required. If you use the package in a scientific publication, please cite the package, as it is written as a volunteer contribution. The package might contain errors and users should critically evaluate the results of any function before publishing them. Contributions, code-fixes, and bug-reports are welcome and should be committed on \href{https://github.com/MikkoVihtakari/sclero}{GitHub}. Persons contributing code to the package will be credited with an authorship (\textit{Authors} field in the \href{https://github.com/MikkoVihtakari/sclero/blob/master/DESCRIPTION}{DESCRIPTION} file).
+The \sclero package for \href{http://www.r-project.org}{R} \citep{R2014} provides tools to measure growth patterns and align sampling spots in chronologically deposited materials. The package is primarily intended for the fields of sclerochronology, geology, and dendrochronology, but the functions can also be applied for other image measuring tasks. The package is developed to interact with \href{http://imagej.nih.gov/ij/}{ImageJ} \citep{Schneider2012}, a free-to-use public domain software for image processing and analysis. Since the \sclero package is developed for open source software, it is free to use and the code is modifiable by anyone interested. If these modifications are distributed in other packages or software, references to the original source (type \texttt{citation("sclero")} in R) and author(s) of the particular function are required. If you use the package in a scientific publication, please cite the package, since it is written as a volunteer contribution. The package might contain errors and users should critically evaluate the results of any function before publishing them. Contributions, code-fixes, and bug reports are welcome and should be committed on \href{https://github.com/MikkoVihtakari/sclero}{GitHub}. Persons contributing code to the package will be credited with authorship (\textit{Authors} field in the \href{https://github.com/MikkoVihtakari/sclero/blob/master/DESCRIPTION}{DESCRIPTION} file).
 
 \subsection{Installation}
 
-The package is now uploaded to \href{https://cran.r-project.org/package=sclero}{CRAN}. If you want to use the developmental version (possibly with new features), please install it from GitHub using the \textit{devtools} package: 
+A stable version of the package can be found from \href{https://cran.r-project.org/package=sclero}{CRAN}. If you want to use the developmental version (possibly with new features), please install it from GitHub using the \href{https://cran.r-project.org/web/packages/devtools/index.html}{\textit{devtools}} package:
 
 \begin{Schunk}
 \begin{Sinput}
- library(devtools)
- install_github("MikkoVihtakari/sclero", dependencies = TRUE)
+ devtools::install_github("MikkoVihtakari/sclero")
 \end{Sinput}
 \end{Schunk}
 
 \subsection{Features}
 
-This tutorial, the functions, and the documentation might be subject to changes. Currently \sclero package contains following features: 
+This tutorial, the functions, and the documentation are subject to changes. Currently \sclero package contains following features:
 
 \begin{enumerate}
+\item \nameref{sec:growth}
 \item \nameref{sec:align}
 \end{enumerate}
 
 \clearpage
-\section{Aligning sample spots with growth lines} \label{sec:align}
+\section{Photographs to sclero} \label{sec:annotation}
 
-Materials that can be used as \href{http://en.wikipedia.org/wiki/Proxy_(climate)}{proxy records} in the fields of sclerochronology, dentrochronology and geology are deposited chronologically \citep{Masson-Delmotte2013}. Consequently, visible growth lines deposited within these records can be used as time markers to reconstruct growth patterns of the material back through time (Figure \ref{Fig:principle}, \citealp{Proctor2000,Sejr2002,Schone2005a,Ambrose2012}). In general, these materials do not grow linearly, complicating the dating of geochemical samples from proxy records \citep{Schone2008,Ambrose2012}. For example, spot samples acquired with laser-ablation inductively-coupled-plasma mass-spectrometry (LA-ICP-MS) or similar techniques along the sampled material are often measured as a distance from a defined position, such as the shell margin in bivalve mollusks, and these distances are then related to time using a variety of geochemical proxies (Figure \ref{Fig:principle}, \citealp{Vihtakari2014}). Sample spots, however, have to be consistently related to the visible growth lines prior time estimates for each sample spot can be acquired (Figure \ref{Fig:principle}). This is because material in proxy records is related to time following the growth rate of the material, and growth lines mark consistent time intervals within these records. 
+The \sclero package uses ImageJ for annotation of features in photographs that are required for further calculations. The package understands four types of ImageJ objects: \textbf{straight line}, \textbf{segmented line}, \textbf{multi-point tool} and \textbf{oval selection}. How these objects are interpreted by the package is explained in Figure \ref{Fig:decisionTree}. Click \href{http://imagej.nih.gov/ij/docs/guide/user-guide.pdf}{this link} for instructions how to use ImageJ.
 
-\begin{figure}[h]
-\begin{center}
-\includegraphics[width=1\textwidth]{principle.pdf}
-\caption{Two sample spot sequences (blue and red numbers inside circles) taken with direction of growth (DoG) along a chronologically deposited material. Growth lines (black lines) mark consistent time intervals (t) relative to a distance from a point with a known time (d) and growth rate of the material (see text). \textbf{A)} Growth lines are vertical and both sample spot sequences are perpendicular to the growth lines. Consequently, the vertical position of sample spots does not affect the distance between sample spots and growth lines, and therefore samples taken vertically on top of each other represent the same time intervals (colored numbers without circles above the distance axis). \textbf{B)} Growth lines are at a 45$^\mathrm{o}$ angle to direction of growth, and therefore sample spot sequences are aligned in an angle to the growth lines. Consequently, the sample spots taken on top of each other do not represent the same time intervals. The \sclero package helps aligning sample spots in both examples correctly using distances from the margin along a distance axis and relative distances of sample spots from adjacent growth lines (see Figure \ref{Fig:traverse}).}
-\label{Fig:principle}
-\end{center}
+\begin{figure}[H]
+\includegraphics[width=1\textwidth]{sclero_decision_schematic.pdf}
+\caption{Photograph annotation decision tree. Boxes with red text indicate ImageJ objects within an ROI zip file and boxes with blue text the resulting sclero objects. Boxes with dashed lines are optional. A straight line is always interpreted as the main axis, to which all other objects are scaled. Only one straight line per ROI file is allowed. Segmented lines are generally interpreted as growth lines, but one can be assigned as a manual growth axis. If segmented lines are not provided, multi-points will be interpreted as growth checks for growth calculations. Otherwise, multi-points are interpreted as sample spots. The area of sample spots for averaging error estimation can be defined by oval objects, which must be placed on top of each multi-point.}
+\label{Fig:decisionTree}
 \end{figure}
 
-The importance of the angle between sample spot sequences and growth lines can be illustrated using two simplified examples: the first example (Figure \ref{Fig:principle}A) represents a proxy record where growth lines are at a right angle to sample spot sequences and the direction of growth, such as umbo sections of bivalve shells, tree cross-sections, otoliths, as well as sediment-, rock-, ice- or tree-cores. The three first growth lines from the left (L1, L2, and L3) are deposited after each other at unknown time intervals ($t_{x} = t_{1} - \frac{d}{\bar{r}_{x}}$, where d is the distance from L4 to the growth line of interest along the distance axis, i.e $d_{L4} - d_{Lx}$; and $\bar{r}_{x}$ is the average growth rate of the material between $d_{Lx}$ and $d_{L4}$). The last growth line on the right represents the margin or the end of the sample material often associated with a known time (t = 1 in this example). Calculating the distance of sample spots along the distance scale, which also represents a relative time scale (see the equation above), is straightforward requiring drawing a straight line from sample spots down to the axis leading to distance values of 1, 3, and 5 for both sequences. Some proxy materials, such as margin sections of bivalve shells and heavily bended sedimentary rocks do not, however, allow positioning the sample spot sequences perpendicularly to growth lines. In the second example the sample spot sequences meet growth lines at a 45$^\mathrm{o}$ angle (Figure \ref{Fig:principle}B). Now both sample spot sequences would yield distance values of 0, 2, and 4, if distance calculation was done similarly to the first example. However, this would lead to a bias when estimating time for each sample spot as the sample spots are obviously not consistently related to the growth lines. To correct for this bias, the sample spots must be related to adjacent growth lines (see Figure \ref{Fig:traverse}). This approach gives distance values of 1.5, 2.5, and 5.5 for the blue sequence and 0.5, 2.5, and 4.5 for the red sequence. These distance estimates correspond better with the chronological nature of proxy materials. The distance axis in both examples represents the historical location of the margin allowing direct growth rate calculations, if the time for each sample spot can be estimated.
+\subsection{Prerequisites}
 
-The \sclero package together with ImageJ enables alignment of sample spots with visible growth bands from photographs of the sampled material. Despite the simplified example above, the \sclero package automatically calculates the location of sample spots no matter how non-linear the growth lines are as long as they do not cross at any point. In addition the package estimates the extent of sample spots along the distance axis (see Section \ref{sec:averaging_error}). This extent can be further used in estimation of time-averaging error \citep{Goodwin2004, Beelaerts2008}. In order to align the samples, the user has to define a distance axis (called `main axis' in the package) to which all sample spots and growth lines will be aligned (Figures \ref{Fig:marked} and \ref{Fig:traverse}). 
-
-\subsection{Prerequisites for sample spot alignment}
-
-In order to run the sample spot alignment, a photograph of sufficient resolution to see the growth lines and sample spots is required (Figure \ref{Fig:marked}). In addition, the user should take care that following points are considered:
+In order to use the \sclero package, a photograph of sufficient resolution to see the growth lines and other desired features is required (Figure \ref{Fig:marked}). In addition, the user should take care that following points are considered:
 
 \begin{description}
-\item[Aspect ratio] The aspect ratio of pixels in the photograph has to be 1:1, meaning that a certain length vertically equals to the same length horizontally. 
-\item[File format] The image file can be of any raster format compatible with ImageJ, but .tif images are generally recommended for editing purposes as this format is lossless meaning that it can be saved again without losing information. %Please note that using vector image formats (.gif, .png, .esp, .pdf) is probably not a good idea when doing measurements from photographs.
-\item[Compiled images] If you are using compiled images from a microscope software, pay a special attention in aligning the photographs correctly as this will affect the results. Make sure that all compiled images are taken with a same magnification.
+\item[Aspect ratio] The aspect ratio of pixels in the photograph has to be 1:1, meaning that a certain length vertically equals to the same length horizontally.
+\item[File format] The image file can be of any format compatible with ImageJ, but .tif images are generally recommended for editing purposes as this format is lossless meaning that it can be saved again without losing information. Yet, as long as the compression does not distort the image, file format should have a minimal impact on the outcome, because the sclero package uses relative distances.
+\item[Compiled images] If you are using compiled images from a microscope software, pay a special attention to aligning the photographs correctly as this will affect the results. Make sure that all compiled images are taken with a same magnification.
 \item[Scaling] If you want real distances as output, the microscope has to be calibrated. If real distances are not important, knowing the microscope calibration is not essential as sample alignment is relative to one photograph. Currently there is no way to export the `Set Scale' option from ImageJ and the scaling has to be conducted using the \texttt{read.ijdata} function.
 \item[Cracks] The sample material has to be chronologically deposited without spatial caps or cracks. If your sample material has large caps or cracks, they are bound to affect the output. One option is to edit the photograph in a photo editing program and remove these cracks.
 \end{description}
 
-\subsection{Mark sample spots and growth lines in ImageJ}
+\subsection{Annotation of photographs in ImageJ}
 
-We use a shell margin of a bivalve shell cross-section as an example (see \citealp{d18O_paper} for details). The example file can be downloaded from \href{https://github.com/MikkoVihtakari/sclero/blob/master/inst/extdata/shellspots.png}{GitHub in .png format}. The quality of the file is not optimal due to file size restrictions, but will suffice for this example. The example shell has one sequence of samples taken with LA-ICP-MS (the large holes, Figure \ref{Fig:marked}). The work-flow can also be applied for multiple sequences of samples (see Section \ref{sec:multiple}). First we have to mark the sample spot centroids and growth lines using ImageJ. Click \href{http://imagej.nih.gov/ij/docs/guide/user-guide.pdf}{this link} for instructions how to use ImageJ. Note that, in general, all marks with ImageJ should be done \textbf{against the direction of growth}. Otherwise the aligning functions might not work properly.
+We use a shell margin of a bivalve shell cross-section from \citealp{Vihtakari2016} as an example. The example file can be downloaded from \href{https://github.com/MikkoVihtakari/sclero/blob/master/inst/extdata/shellspots.png}{GitHub in .png format}. The example shell has one sequence of samples taken with LA-ICP-MS (the large holes, Figure \ref{Fig:marked}) enabling sample spot alignment (see Section \ref{sec:multiple} for multiple sequences). Annotation of growth lines and main axis is enough for growth measurements (Section \ref{sec:growth}). First, we will mark sample spot centroids using ImageJ, which is not required if you only want to measure growth. Once this is done, we will proceed to annotate growth lines and the main axis. These two annotations are always required.
 
 \begin{figure}[H]
 \includegraphics[width=1\textwidth]{marked_shell.pdf}
-\caption{ImageJ annotated bivalve shell section. Large holes marked with crosses represent LA-ICP-MS sample spots. Colored lines on the shell section indicate the ImageJ marked growth lines, green line further representing the shell margin, yellow lines sub-annual growth lines, red lines the extent of a winter growth band, and blue line a growth line with a known time. Note that the green line (shell margin) covers the entire shell section, whereas other growth lines are long enough to align sample spots chronologically. White arrow marked `DoG' points towards the direction of growth. The magenta straight line represents the distance (main) axis. The main axis should not cross any growth line when \texttt{type} is "along". If \texttt{type} is "cross", the main axis has to cross all growth lines (see Section \ref{sec:settings}). Colors are used here only for illustration purposes and are ignored by the \sclero package.}
+\caption{ImageJ annotated bivalve shell section. Colored lines on the shell section indicate the ImageJ marked growth lines, green line further representing the shell margin, yellow lines sub-annual growth lines, red lines the extent of a winter growth band, and blue line a growth line with a known time. Note that the green line (shell margin) covers the entire shell section, whereas other growth lines are long enough to align sample spots chronologically. The magenta straight line represents the distance (main) axis. The main axis should not cross any growth line when \texttt{type} is "along". If \texttt{type} is "cross", the main axis has to cross all growth lines (see Section \ref{sec:settings}). Large holes marked with crosses represent LA-ICP-MS sample spots. White arrow marked `DoG' points towards the direction of growth. Colors are used here only for illustration purposes and are ignored by the \sclero package.}
 \label{Fig:marked}
 \end{figure}
 
@@ -122,21 +116,23 @@ We use a shell margin of a bivalve shell cross-section as an example (see \citea
 \includegraphics[width = 0.8\textwidth]{multi_point.png}
 \end{center}
 \end{figure}
-\item After this open the ROI manager and add the sequence using Add[t] button (the keyboard shortcut is \textit{Ctrl + T} or \textit{Cmd + T} depending on the OS). You can rename the ROI (Region Of Interest) to correspond the type of the object (`Laser') for your own reference. The ROI names can be assigned as object names in consequent R functions, although this behavior is not required (see Section \ref{sec:read.ijdata}). If you decide to do this, use \texttt{\_} or \texttt{.} as a separator marker. Do not use other special characters (\texttt{-} \texttt{,} \texttt{\#}) or white space in ROI names, which you want to keep, because these will confuse the internal \texttt{grep} functions. ImageJ automatically generates ROI names containing \texttt{-} (0782-4756 for instance). These names are not valid \texttt{vector} names in R and will be regenerated by the functions in the \sclero package.
+\item After this open the ROI manager and add the sequence using Add[t] button (the keyboard shortcut is \textit{Ctrl + T} or \textit{Cmd + T} depending on the OS). You can rename the ROI (Region Of Interest) to correspond the type of the object (`Laser') for your own reference. The ROI names can be assigned as object names in consequent R functions, although this behavior is not required (see Section \ref{sec:read.ijdata}). If you decide to do this, use \texttt{\_} or \texttt{.} as a separator marker. Do not use other special characters (\texttt{-} \texttt{,} \texttt{\#}) or white space in ROI names, which you want to keep, because these will confuse the internal \texttt{grep} functions. ImageJ automatically generates ROI names containing \texttt{-} (0782-4756 for instance). These names are not valid \texttt{data.frame} column names in R and will be regenerated by the functions in the \sclero package.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width = 0.25\textwidth]{roi_manager.png}
 \end{center}
 \end{figure}
-\item After this mark the visible growth lines using `Segmented Line' tool starting from the lower margin upwards \textit{against the direction of growth}. Mark each line so that the sample spots are in between at least two lines, but it is not necessary to continue marking much further (Figure \ref{Fig:marked}). Add each line separately to the ROI manager. The order of lines is not important as this can be changed later. Often it is easiest to start with the most clear growth lines and add less clear growth lines in between these lines as needed. Pay special attention that the \textbf{growth lines do not cross each other}. Further, there must be \textbf{at least one growth line before and after the first and last sample spot} (note the short yellow line on the right in Figure \ref{Fig:marked}). It might be helpful to rename the growth line ROIs, so that they are easier to associate later. 
+\item After this, mark the visible growth lines using `Segmented Line' tool starting from the lower margin upwards \textit{against the direction of growth}. Mark each line so that the sample spots are in between at least two lines, but it is not necessary to continue marking much further (Figure \ref{Fig:marked}). Add each line separately to the ROI manager. The order of lines is not important as this will be changed later. Often it is easiest to start with the most clear growth lines and add less clear growth lines in between these lines as needed. Pay special attention that the \textbf{growth lines do not cross each other}. Further, there must be \textbf{at least one growth line before and after the first and last sample spot} (note the short yellow line on the right in Figure \ref{Fig:marked}). It might be helpful to rename the growth line ROIs, so that they are easier to associate later.
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width = 0.8\textwidth]{segmented_line.png}
 \end{center}
 \end{figure}
-\item Once you are done with this, add the measurement axis using the `Straight Line' tool. It is very important to \textbf{start the axis from where you want the measurements to begin} as all distances will be scaled to this axis. The main axis should not cross any growth line, if the axis is intended to be approximately parallel to the growth lines (cores and shell sections). If your sample material is a cross-section of a tree or coral or an umbo region of a bivalve, the main axis has to cross all growth lines (see Section \ref{sec:settings}). Note that it is possible to have only one Straight Line per ImageJ .zip file as the internal functions recognize the straight line as the main axis automatically. 
+\item Growth measurement functions support one segmented line as manual growth axis. You can add one segmented line as a growth axis if needed. It is a good idea to rename this segmented line as `growth` for instance.
+\item Once you are done with this, add the measurement axis using the `Straight Line' tool. It is very important to \textbf{start the axis from where you want the measurements to begin} as all distances will be scaled to this axis. The main axis should not cross any growth line, if the axis is intended to be approximately parallel to the growth lines (cores and shell sections). If your sample material is a cross-section of an otolith, a tree or a coral or an umbo region of a bivalve, the main axis has to cross all growth lines (see Section \ref{sec:settings}). Note that it is possible to have only one Straight Line per ImageJ .zip file since the internal functions recognize the straight line as the main axis automatically.
 \item After this you can save the ROI collection as a .zip file (More, Save...) naming it `shellspots.zip'.
 \end{enumerate}
+
 
 \subsection{Reading ImageJ zip files containing ROI objects} \label{sec:read.ijdata}
 
@@ -148,12 +144,12 @@ Next we can open R and load the \textit{sclero} package.
 \end{Sinput}
 \end{Schunk}
 
-\mnote{read.ijdata} After this we use \texttt{read.ijdata} function to read and process the ImageJ .zip file containing ROIs. The code below is possible to run without having saved `shellspots.zip' file. If you followed the example above, replace `path' with the location of your ImageJ .zip file. 
+\mnote{read.ijdata} After this we use \texttt{read.ijdata} function to read and process the ImageJ .zip file containing ROIs. The code below is possible to run without having saved `shellspots.zip' file. If you followed the example above, replace `path' with the location of your ImageJ .zip file.
 
 \begin{Schunk}
 \begin{Sinput}
  path <- file.path(system.file("extdata", package = "sclero"), "shellspots.zip")
- dat <- read.ijdata(path, scale = 0.7812, unit = "um") 
+ dat <- read.ijdata(path, scale = 0.7812, unit = "um")
 \end{Sinput}
 \end{Schunk}
 
@@ -171,45 +167,12 @@ gbs.x          14     data.frame list
 gbs.y          14     data.frame list     
 main.x          1     data.frame list     
 main.y          1     data.frame list     
+growth.x        0     -none-     NULL     
+growth.y        0     -none-     NULL     
 sample.name     1     -none-     character
 scaling.factor  1     -none-     numeric  
 unit            1     -none-     character
-\end{Soutput}
-\end{Schunk}
-
-\mnote{\mbox{order}.
-\mbox{ijdata}} At this point it can be of interest to reorder some of the ROIs. The order of ROIs does not make a difference in subsequent calculations, but the output will be given in the order the of IJDATA object. \texttt{order.ijdata(..., print.order = TRUE)} function can be used to check the order of ROIs.
-
-\begin{Schunk}
-\begin{Sinput}
- order.ijdata(dat, print.order = TRUE)
-\end{Sinput}
-\begin{Soutput}
-$spots
-           Laser
-col.number     1
-
-$gbs
-           margin calcein l3 WG_start WG_end l6 l7 l8 l9 l10 l11 l12 l13 l14
-col.number      1       2  3        4      5  6  7  8  9  10  11  12  13  14
-\end{Soutput}
-\end{Schunk}
-
-The same function can be used to reorder and subset ROIs within IJDATA objects. Subsetting can be done by leaving out the elements you do not want to include in the IJDATA object. In the case of subsetting the function prints a warning to make sure that the user did not forget to specify all elements within the object. Say that we want to reorder the growth lines:
-
-\begin{Schunk}
-\begin{Sinput}
- dat2 <- order.ijdata(dat, gbs = c(1,3,6:14,4,5,2))
- order.ijdata(dat2, print.order = TRUE)
-\end{Sinput}
-\begin{Soutput}
-$spots
-           Laser
-col.number     1
-
-$gbs
-           margin l3 l6 l7 l8 l9 l10 l11 l12 l13 l14 WG_start WG_end calcein
-col.number      1  2  3  4  5  6   7   8   9  10  11       12     13      14
+parameters      5     -none-     list     
 \end{Soutput}
 \end{Schunk}
 
@@ -223,29 +186,58 @@ col.number      1  2  3  4  5  6   7   8   9  10  11       12     13      14
 \end{Schunk}
 
 \mnote{plot.
-rawDist} The function returns a list of class \texttt{rawDist}, which can be plotted using the generic plotting function. The plot will be a representation of the ROIs, with the exception that the coordinate system is flipped vertically. This is because of coordinate system differences between Java (ImageJ) and R.
+rawDist} The function returns a list of class \texttt{rawDist}, which can be plotted using the generic plotting function. The plot will be a representation of the ROIs, with coordinates rotated relative to the starting and ending point of the main axis.
 
 \begin{figure}[H]
 \begin{center}
 \begin{Schunk}
 \begin{Sinput}
- plot(shell)
+ plot(shell, coord.type = "both")
 \end{Sinput}
 \end{Schunk}
 \includegraphics{sclero_tutorial-plot1}
 \end{center}
-\caption{The digitized representation of the shell section. Red numbers show the location of the sample spots. Grey lines represent the marked growth lines and the purple line the main axis to which the sample spots will be aligned. Y-axis coordinates are flipped due to a difference in the coordinate system between R and ImageJ (Java).}
+\caption{The digitized representation of the shell section. Red numbers show the location of the sample spots. Grey lines represent the marked growth lines and the purple line the main axis to which the sample spots will be aligned. Coordinates are rotated relative to the starting and ending point of the main axis.}
 \label{Fig:rawDist}
 \end{figure}
+
+\clearpage
+\section{Measuring growth} \label{sec:growth}
+
+Chronologically deposited materials typically contain growth lines, which can be used as time markers to measure growth of the material. Apart from cores, these growth lines rarely are straight or parallel to each other, leading to a sitution where placement of the measurement axis (i.e. line or "a ruler" used to measure distance between growth lines) influences the outcome (Figure \ref{Fig:growthlines}). Typically in such cases, the distance is measured as maximum distance between growth lines (i.e. line of maximum growth; REF).
+
+\begin{figure}[ht]
+%\includegraphics[width=1\textwidth]{sclero_decision_schematic.pdf}
+\caption{Bla.}
+\label{Fig:growthlines}
+\end{figure}
+
+
+\clearpage
+\section{Aligning sample spots with growth lines} \label{sec:align}
+
+Materials that can be used as \href{http://en.wikipedia.org/wiki/Proxy_(climate)}{proxy records} in the fields of sclerochronology, dendrochronology and geology are deposited chronologically \citep{Masson-Delmotte2013}. Consequently, visible growth lines deposited within these records can be used as time markers to reconstruct growth patterns of the material back through time (Figure \ref{Fig:principle}, \citealp{Proctor2000,Sejr2002,Schone2005a,Ambrose2012}). In general, these materials do not grow linearly, complicating the dating of geochemical samples from proxy records \citep{Schone2008,Ambrose2012}. For example, spot samples acquired with laser-ablation inductively-coupled-plasma mass-spectrometry (LA-ICP-MS) or similar techniques along the sampled material are often measured as a distance from a defined position, such as the shell margin in bivalve mollusks, and these distances are then related to time using a variety of geochemical proxies (Figure \ref{Fig:principle}, \citealp{Vihtakari2014}). Sample spots, however, have to be consistently related to the visible growth lines prior time estimates for each sample spot can be acquired (Figure \ref{Fig:principle}). This is because material in proxy records is related to time following the growth rate of the material, and growth lines mark consistent time intervals within these records.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=1\textwidth]{principle.pdf}
+\caption{Two sample spot sequences (blue and red numbers inside circles) taken with direction of growth (DoG) along a chronologically deposited material. Growth lines (black lines) mark consistent time intervals (t) relative to a distance from a point with a known time (d) and growth rate of the material (see text). \textbf{A)} Growth lines are vertical and both sample spot sequences are perpendicular to the growth lines. Consequently, the vertical position of sample spots does not affect the distance between sample spots and growth lines, and therefore samples taken vertically on top of each other represent the same time intervals (colored numbers without circles above the distance axis). \textbf{B)} Growth lines are at a 45$^\mathrm{o}$ angle to direction of growth, and therefore sample spot sequences are aligned in an angle to the growth lines. Consequently, the sample spots taken on top of each other do not represent the same time intervals. The \sclero package helps aligning sample spots in both examples correctly using distances from the margin along a distance axis and relative distances of sample spots from adjacent growth lines (see Figure \ref{Fig:traverse}).}
+\label{Fig:principle}
+\end{center}
+\end{figure}
+
+The importance of the angle between sample spot sequences and growth lines can be illustrated using two simplified examples: the first example (Figure \ref{Fig:principle}A) represents a proxy record where growth lines are at a right angle to sample spot sequences and the direction of growth, such as umbo sections of bivalve shells, tree cross-sections, otoliths, as well as sediment-, rock-, ice- or tree-cores. The three first growth lines from the left (L1, L2, and L3) are deposited after each other at unknown time intervals ($t_{x} = t_{1} - \frac{d}{\bar{r}_{x}}$, where d is the distance from L4 to the growth line of interest along the distance axis, i.e $d_{L4} - d_{Lx}$; and $\bar{r}_{x}$ is the average growth rate of the material between $d_{Lx}$ and $d_{L4}$). The last growth line on the right represents the margin or the end of the sample material often associated with a known time (t = 1 in this example). Calculating the distance of sample spots along the distance scale, which also represents a relative time scale (see the equation above), is straightforward requiring drawing a straight line from sample spots down to the axis leading to distance values of 1, 3, and 5 for both sequences. Some proxy materials, such as margin sections of bivalve shells and heavily bended sedimentary rocks do not, however, allow positioning the sample spot sequences perpendicularly to growth lines. In the second example the sample spot sequences meet growth lines at a 45$^\mathrm{o}$ angle (Figure \ref{Fig:principle}B). Now both sample spot sequences would yield distance values of 0, 2, and 4, if distance calculation was done similarly to the first example. However, this would lead to a bias when estimating time for each sample spot as the sample spots are obviously not consistently related to the growth lines. To correct for this bias, the sample spots must be related to adjacent growth lines (see Figure \ref{Fig:traverse}). This approach gives distance values of 1.5, 2.5, and 5.5 for the blue sequence and 0.5, 2.5, and 4.5 for the red sequence. These distance estimates correspond better with the chronological nature of proxy materials. The distance axis in both examples represents the historical location of the margin allowing direct growth rate calculations, if the time for each sample spot can be estimated.
+
+The \sclero package together with ImageJ enables alignment of sample spots with visible growth bands from photographs of the sampled material. Despite the simplified example above, the \sclero package automatically calculates the location of sample spots no matter how non-linear the growth lines are as long as they do not cross at any point. In addition the package estimates the extent of sample spots along the distance axis (see Section \ref{sec:averaging_error}). This extent can be further used in estimation of time-averaging error \citep{Goodwin2004, Beelaerts2008}. In order to align the samples, the user has to define a distance axis (called `main axis' in the package) to which all sample spots and growth lines will be aligned (Figures \ref{Fig:marked} and \ref{Fig:traverse}).
 
 \subsection{Aligning sample spots} \label{sec:spot.dist}
 
 \mnote{spot.dist} An object of class \texttt{rawDist} can be readily processed using the \texttt{spot.dist} function. First, the function projects the beginning of each growth line to the measurement axis ($L_1$ and $L_2$ in Figure \ref{Fig:traverse}). Then, the sample spots are aligned along the main axis in relation to the adjacent growth lines on both sides of a sample spot such that $d_1/d_2 = d_{L_1}/d_{L_2}$.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[width=0.5\textwidth]{spot_alignment.pdf}
-\caption{Alignment of sample spots along the distance (main) axis. Grey lines represent ImageJ marked growth lines, open black circle a sample spot, and blue dots the centroid and the closest points to the adjacent growth lines along the perimeter of the sample spot. The \texttt{spot.dist} function aligns the blue dots such that $d_1/d_2 = d_{L_1}/d_{L_2}$ resulting to a segment along the distance axis (blue dot with error bars). Only the centroid is used, if sample spot areas are not specified separately (see Section \ref{sec:averaging_error}). The figure is from \citet{d18O_paper}}
+\caption{Alignment of sample spots along the distance (main) axis. Grey lines represent ImageJ marked growth lines, open black circle a sample spot, and blue dots the centroid and the closest points to the adjacent growth lines along the perimeter of the sample spot. The \texttt{spot.dist} function aligns the blue dots such that $d_1/d_2 = d_{L_1}/d_{L_2}$ resulting to a segment along the distance axis (blue dot with error bars). Only the centroid is used, if sample spot areas are not specified separately (see Section \ref{sec:averaging_error}). The figure is from \citet{Vihtakari2016}}
 \label{Fig:traverse}
 \end{center}
 \end{figure}
@@ -257,6 +249,7 @@ spotDist} The function returns a list of class \texttt{spotDist} containing new 
 \begin{center}
 \begin{Schunk}
 \begin{Sinput}
+ # shell <- convert.ijdata(shellspots) # if you did not follow the example above
  aligned <- spot.dist(shell)
  plot(aligned)
 \end{Sinput}
@@ -279,15 +272,17 @@ Scaling factor: 0.7812 pixels/um
 
 Including following elements:
        list.elements       type ncol nrow length
- spots               list          0    0      1
- gbs                 psp           0    0      5
  main                psp           0    0      5
+ gbs                 psp           0    0      5
+ spots               list          0    0      1
+ growth              NULL          0    0      0
  window              owin          0    0      4
  start.main          ppp           0    0      6
  end.main            ppp           0    0      6
  sample.name         character     0    0      1
  scaling.factor      numeric       0    0      1
  unit                character     0    0      1
+ parameters          list          0    0     10
  main.type           character     0    0      1
  gb.projections      ppp           0    0      6
  gb.start            ppp           0    0      6
@@ -340,20 +335,20 @@ Sample spot output:
 
 Growth line output:
      line             gap gap.l.main     dist0
- margin   margin-l9        102.40655    0.0000
- l9       l9-l8            168.97081  102.4066
- l8       l8-l7            279.05786  271.3774
- l7       l7-l13           459.54941  550.4352
- l13      l13-l10           96.00614 1009.9846
- l10      l10-l11          497.95187 1105.9908
- l11      l11-l12          413.46646 1603.9427
- l12      l12-l6           325.14081 2017.4091
- l6       l6-WG_end        343.06196 2342.5499
+ margin   margin-s9        102.40655    0.0000
+ s9       s9-s8            168.97081  102.4066
+ s8       s8-s7            279.05786  271.3774
+ s7       s7-s13           459.54941  550.4352
+ s13      s13-s10           96.00614 1009.9846
+ s10      s10-s11          497.95187 1105.9908
+ s11      s11-s12          413.46646 1603.9427
+ s12      s12-s6           325.14081 2017.4091
+ s6       s6-WG_end        343.06196 2342.5499
  WG_end   WG_end-WG_start  322.58065 2685.6119
- WG_start WG_start-l3      565.79621 3008.1925
- l3       l3-calcein        61.44393 3573.9887
- calcein  calcein-l14      375.06400 3635.4327
- l14      NA                      NA 4010.4967
+ WG_start WG_start-s3      565.79621 3008.1925
+ s3       s3-calcein        61.44393 3573.9887
+ calcein  calcein-s14      375.06400 3635.4327
+ s14      NA                      NA 4010.4967
 \end{Soutput}
 \end{Schunk}
 
@@ -386,12 +381,12 @@ All functions in this package are still at an experimental stage. They do work f
 \clearpage
 \subsection{Estimating spatial averaging error of sample spots} \label{sec:averaging_error}
 
-The \sclero package can estimate the size of each sample spot, if size information is available. Size information can be assigned using the `Oval', `Elliptical', and `Rectangular selections' tools in ImageJ. To illustrate the process, we use the example above. 
+The \sclero package can estimate the size of each sample spot, if size information is available. Size information can be assigned using the `Oval', `Elliptical', and `Rectangular selections' tools in ImageJ. To illustrate the process, we use the example above.
 
 \subsubsection{Add sample spot size information in ImageJ}
 
 \begin{enumerate}
-\item Open the shellspots.png and shellspots.zip files you saved in the previous steps. Both of these files are available in the \texttt{extdata} folder of the \sclero package. 
+\item Open the shellspots.png and shellspots.zip files you saved in the previous steps. Both of these files are available in the \texttt{extdata} folder of the \sclero package.
 \item Select the `Oval selections' tool and mark the outline of the first sample spot. You can get circles by pressing down \textit{Shift} button while you do the marking. After releasing the mouse, you can still adjust the position of the circle. Once you are satisfied with the size and position of the circle, add the selection to ROI manager (\textit{Ctrl + T} or \textit{Cmd + T} depending on the OS).
 \begin{figure}[H]
 \begin{center}
@@ -429,7 +424,7 @@ size} Assigning the sample spot sizes to \texttt{rawDist} objects is done using 
 \begin{Schunk}
 \begin{Sinput}
  path <- file.path(system.file("extdata", package = "sclero"))
- shellsizes <- assign.size(shell, path = path)
+ shellsizes <- assign.size(shell, file = "shellspots.zip", path = path)
 \end{Sinput}
 \end{Schunk}
 \mnote{size
@@ -441,16 +436,16 @@ information} Sample spot area and diameter can now be extracted from the \texttt
 \begin{Soutput}
 Hyperframe:
   spot dist2spot spot.owin.name spot.owins spot.area spot.diameter
-1    1  4.615401          size1     (owin)  5271.123      81.92446
-2    2  3.263581 0001-0378-0383     (owin)  4479.683      75.52411
-3    3  3.732048 0001-0365-0459     (owin)  4181.123      72.96397
-4    4  1.280082 0001-0355-0546     (owin)  4329.116      74.24404
-5    5  1.280082 0001-0343-0620     (owin)  4329.116      74.24404
-6    6  1.280082 0001-0334-0693     (owin)  4035.704      71.68390
+1    1  4.615401          size1     (owin)  5267.895      83.34566
+2    2  3.263581 0001-0378-0383     (owin)  4476.939      76.83428
+3    3  3.732048 0001-0365-0459     (owin)  4178.562      74.22973
+4    4  1.280161 0001-0355-0546     (owin)  4326.473      75.53200
+5    5  1.280003 0001-0343-0620     (owin)  4326.473      75.53200
+6    6  1.280082 0001-0334-0693     (owin)  4033.232      72.92745
 \end{Soutput}
 \end{Schunk}
 
-\mnote{dist2spot} The \texttt{dist2spot} column specifies the shortest distance between recalculated spot centroid location and the sample spot location assigned using the `Multi-point' tool. This distance is used to associate each sample spot circle with a sample spot. 
+\mnote{dist2spot} The \texttt{dist2spot} column specifies the shortest distance between recalculated spot centroid location and the sample spot location assigned using the `Multi-point' tool. This distance is used to associate each sample spot circle with a sample spot.
 
 \mnote{spot.dist
 extent} Calculating the maximum extent of each sample spot along the distance (main) axis (Figure \ref{Fig:traverse}) can now be conducted using the \texttt{spot.dist} function. Centroids of marked spots are automatically used to estimate the location of sample spots along the main axis, and the results therefore slightly differ from those obtained in Section \ref{sec:spot.dist}.
@@ -462,12 +457,12 @@ extent} Calculating the maximum extent of each sample spot along the distance (m
 \end{Sinput}
 \begin{Soutput}
   spot      dist  dist.min dist.max spot.area spot.diameter
-1    1  99.74392  21.82515 215.3387  5271.123      81.92446
-2    2 180.81162  77.35968 273.1909  4479.683      75.52411
-3    3 244.93171 129.08129 331.0464  4181.123      72.96397
-4    4 313.45954 214.39049 383.7175  4329.116      74.24404
-5    5 344.50215 280.20636 408.4641  4329.116      74.24404
-6    6 373.51313 316.56173 430.3051  4035.704      71.68390
+1    1  99.74392  22.62012 102.2916  5267.895      83.34566
+2    2 180.81162 102.83796 271.3649  4476.939      76.83428
+3    3 244.93171 130.33749 271.8315  4178.562      74.22973
+4    4 313.45968 270.66711 382.9403  4326.473      75.53200
+5    5 344.50228 280.94101 407.8472  4326.473      75.53200
+6    6 373.51313 317.17724 429.7806  4033.232      72.92745
 \end{Soutput}
 \end{Schunk}
 
@@ -594,7 +589,7 @@ The sclero package depends on:
 \begin{description}
 \item[RImageJROI] \citep{RImageJROI}. Used to import ImageJ ROI objects to R.
 \item[spatstat] \citep{Baddeley2005}. Used for geometric calculations.
-\item[plyr] \citep{Wickham2011}. Used for quicker and easier list calculations. 
+\item[plyr] \citep{Wickham2011}. Used for quicker and easier list calculations.
 \end{description}
 
 \bibliographystyle{abbrvnat}

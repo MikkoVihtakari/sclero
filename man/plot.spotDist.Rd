@@ -34,13 +34,6 @@
 \item{highlight.col}{A character argument specifying the color to be used in growth band highlighting (\code{highlight.gbs}).}
 
 \item{crossing.points}{Indicates whether the crossing points between sampling spot sequence traverses and growth lines should be plotted. Defaults to FALSE.}
-
-\item{coord.type}{A character or numeric argument defining the coordinate type to plot. Alternatives:
-\itemize{
-  \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
-  \item \strong{"original"} or \strong{2}. Only original ImageJ ROI coordinates.
-  \item \strong{"both"} or any other character/integer. Both coordinates side by side.
-}}
 }
 \description{
 Plots a map of \code{\link[=spot.dist]{spotDist}} object.

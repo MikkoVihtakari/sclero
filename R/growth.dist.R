@@ -9,16 +9,16 @@
 #' @details This function is still under developemt and may not work as intended.
 #' @return A list of class \code{"growthDist"}. The first element (\code{$data}) contains a data.frame of growth measurements. The \code{$id} column gives the order of growth increments from the start point defined by the \code{main} axis. The \code{$gap} column gives the name of growth lines between which the growth is measured. Following columns give the growth measurements in units defined by the user in \code{\link{read.ijdata}} function (see the \code{scale} and \code{unit} arguments). The columns denoted as \code{.pr} give the percentage growth as compared to estimated total growth in the sample. The second list element contains \link[spatstat]{spatstat} segmented line (\code{psp}) patterns of the various growth measurement methods. List elements with \code{NULL} values were not applicable for the sample type. Abbreviations for measurement types are given in parenthesis. The types are:
 #' \itemize{
-#'   \item \code{\strong{$main}} (main).
-#'   \item \code{\strong{$manual}} (man). Only applicable for \code{cross} section types.
-#'   \item \code{\strong{$caliber}} (cal). Only applicable for \code{along} section types.
-#'   \item \code{\strong{$maximum}} (max).
-#'   \item \code{\strong{$maximum.along.x1}} (maxx1). Only applicable for \code{cross} section types.
-#'   \item \code{\strong{$maximum.along.x2}} (maxx2). Only applicable for \code{cross} section types.
-#'   \item \code{\strong{$guided.maximum}} (maxg). Only applicable for \code{cross} section types.
-#'   \item \code{\strong{$minimum}} (min). Only applicable for \code{cross} section types.
-#'   \item \code{\strong{$guided.minimum}} (ming). Only applicable for \code{cross} section types.
-#'   \item \code{\strong{$direct}} (dire). Only applicable for \code{along} section types.
+#'   \item \code{$main} (main).
+#'   \item \code{$manual} (man). Only applicable for \code{cross} section types.
+#'   \item \code{$caliber} (cal). Only applicable for \code{along} section types.
+#'   \item \code{$maximum} (max).
+#'   \item \code{$maximum.along.x1} (maxx1). Only applicable for \code{cross} section types.
+#'   \item \code{$maximum.along.x2} (maxx2). Only applicable for \code{cross} section types.
+#'   \item \code{$guided.maximum} (maxg). Only applicable for \code{cross} section types.
+#'   \item \code{$minimum} (min). Only applicable for \code{cross} section types.
+#'   \item \code{$guided.minimum} (ming). Only applicable for \code{cross} section types.
+#'   \item \code{$direct} (dire). Only applicable for \code{along} section types.
 #' }
 #' @seealso \code{\link{read.ijdata}} for reading zip files containing ImageJ ROIs.
 #' \code{\link{convert.ijdata}} for converting the coordinate information to \link[spatstat]{spatstat} point patterns.

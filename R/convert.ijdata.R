@@ -43,7 +43,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   
   owin <- spatstat::owin(xrange = range.x, yrange =  range.y, unitname = X$unit)
   
-  ## 2. Main axis ###
+  ## 2. Main axis ####
   
   x <- X$main.x
   x <- x[!is.na(x)]
@@ -61,7 +61,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   main.shift.x <- -main.rot$ends$x0
   main.shift.y <- -main.rot$ends$y0
   
-  ## 3. Growth lines ###
+  ## 3. Growth lines ####
   
   x <- X$gbs.x
   y <- X$gbs.y

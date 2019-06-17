@@ -19,6 +19,8 @@
 
 \item{main.type}{A character argument with four possible levels (\code{"all"}, \code{"axis"}, \code{"ends"}, and \code{"none"}) indicating how the distance / main axis should be plotted. Defaults to \code{"all"} indicating that both the main axis and end points should be plotted. If \code{"axis"} only the main axis will be plotted. If \code{"ends"} only the end points will be plotted, and if \code{"none"} the main axis intormation will not be plotted.}
 
+\item{color.palette}{Not implemented.}
+
 \item{highlight.gbs}{A character vector specifying the names of growth bands to be highlighted (i.e. colored with a different color than "darkgrey"). If \code{NULL} (default) all growth bands will be drawn using the standard color.}
 
 \item{highlight.col}{A character argument specifying the color to be used in growth band highlighting (\code{highlight.gbs}).}

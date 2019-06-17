@@ -3,12 +3,6 @@
 #' 
 #' @param x \code{\link[=spot.dist]{spotDist}} object 
 #' @param ... Arguments to be passed to other methods, such as \link[=par]{graphical parameters}.
-#' @param coord.type A character or numeric argument defining the coordinate type to plot. Alternatives:
-#' \itemize{
-#'   \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
-#'   \item \strong{"original"} or \strong{2}. Only original ImageJ ROI coordinates.
-#'   \item \strong{"both"} or any other character/integer. Both coordinates side by side.
-#' }
 #' @param sample.name A character argument specifying the sample name to be plotted as an overall title for the plot (\code{\link[=plot.default]{main}}). Defaults to \code{"keep"} meaning that the sample name will be extracted from the \code{\link[=convert.ijdata]{rawDist}} object. The plot title can be omitted by specifying \code{sample.name = NULL}.
 #' @param spot.type A character argument with three possible levels (\code{"id"}, \code{"value"}, and \code{"idvalue"}) indicating how sample spots should be plotted. Defaults to \code{"id"}, which plots sample spot numbers within open circles. The size of the circles can be controlled using the \code{spot.size} argument. The option \code{"value"} results to a sample map where the color of circles is related to a value through \code{\link{assign.value}} function. The color scale can be set using the \code{color.palette} argument, and size of the symbols (pch = 21) and through the \code{spot.size} argument. The option \code{"idvalue"} combines \code{"id"} and \code{"value"} leading to a sample map with sample spot numbers.
 #' @param spot.size An integer or a character argument with value \code{"actual"} indicating the size (\code{\link[=par]{cex}}) of points. If \code{"actual"}, the actual size and shape of sample spots will be plotted. In this case, \link[=assign.size]{sample spot size information} is required. Defaults to 2 meaning that sample spots are plotted as points with pch = 21 and cex = 2.
