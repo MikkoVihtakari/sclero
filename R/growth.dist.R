@@ -94,9 +94,9 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
   }
 
 
-  ## Part 2 Manual growth axis ###
+  ## Part 2 Manual growth axis ####
 
-  if(sec.type == "cross") {
+  if(sec.type == "cross" & !is.null(growth)) {
 
     tmp <- spatstat::crossing.psp(growth, gbs.all, details = TRUE)
     tmp.marks <- spatstat::marks(gbs.all)[spatstat::marks(tmp)$jB]
@@ -114,7 +114,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   }
 
-  ## Part 3 Main axis & caliber for along types
+  ## Part 3 Main axis & caliber for along types ####
 
   if(sec.type == "cross") {
 
@@ -172,7 +172,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
     dat.cal$cal.pr <- 100*dat.cal$cal/sum(dat.cal$cal)
   }
 
-  ## Part 4 Minimum distance ###
+  ## Part 4 Minimum distance ####
 
   if(sec.type == "cross") {
 
@@ -211,7 +211,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   }
 
-  ## Part 5 Guided minimum distance ###
+  ## Part 5 Guided minimum distance ####
 
   if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1)) {
     for(i in 2:(nlevels(spatstat::marks(gbs.all)))) {
@@ -331,7 +331,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   }
 
-  ## Part 6 Maximum distances ###
+  ## Part 6 Maximum distances ####
 
   if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1)) {
 

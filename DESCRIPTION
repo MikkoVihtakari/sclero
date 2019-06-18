@@ -1,7 +1,7 @@
 Package: sclero
 Title: Measure Growth Patterns and Align Sampling Spots in Photographs
-Version: 0.3.5
-Date: 2019-06-17
+Version: 0.3.6
+Date: 2019-06-18
 Authors@R: c(person("Mikko", "Vihtakari", role=c("aut", "cre"), email="mikko.vihtakari@gmail.com"))
 Maintainer: Mikko Vihtakari <mikko.vihtakari@gmail.com>
 Description: Provides functions to measure growth patterns and align
