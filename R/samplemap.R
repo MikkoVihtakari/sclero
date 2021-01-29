@@ -111,7 +111,7 @@ samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalett
     
     if(all(unlist(lapply(x$values, is.null)))) stop("'values' for the color mapping must be specified. See ?assign.value")
     color.spec = TRUE
-    colmap <- colourmap(colpalette, range = range(unlist(lapply(x$values, function(k) range(k[,2]))), na.rm = TRUE))
+    colmap <- colourmap(colpalette, range = range(unlist(lapply(x$values, function(k) range(k[,2], na.rm = TRUE))), na.rm = TRUE))
     COLOR <- lapply(seq_along(x$spots), function(i){
       ifelse(is.na(x$values[[i]][,2]), "white", colmap(x$values[[i]][,2]))
     })

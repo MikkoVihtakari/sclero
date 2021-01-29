@@ -80,9 +80,32 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   
   start.gbs <- marks(gbs[spatstat::nearestsegment(start, gbs)])
   
+  ## Part 3.2 Test whether the object is 'along' or 'cross' type (see the tutorial) ###
+  
+  test <- spatstat::crossing.psp(main, spatstat::superimpose(gbs))
+  
+  if(test$n == 0) {
+    sec.type <- "along"
+  } else {
+    if(test$n == length(unique(gbs$marks))) {
+      sec.type <- "cross"
+    } else {
+      stop(paste0("Number of growth line and main axis crossing points is neither 0 or ", length(unique(gbs$marks)), ". Cannot define the aligment type. See ?spot.dist"))
+    }
+  }
+  
+  ## 3.3. Closest distances
+  
   # k <- gbs.list[[1]]
   tmp <- lapply(gbs.list, function(k) {
-    data.frame(gbs.name = unique(spatstat::marks(k)), min = min(spatstat::crossdist(gbs.list[[start.gbs]], k)), max = max(spatstat::crossdist(gbs.list[[start.gbs]], k)), stringsAsFactors = FALSE)
+    
+    if(sec.type == "along") {
+      data.frame(gbs.name = unique(spatstat::marks(k)), min = min(spatstat::crossdist(gbs.list[[start.gbs]], k)), max = max(spatstat::crossdist(gbs.list[[start.gbs]], k)), stringsAsFactors = FALSE)
+    } else {
+      crs.point <- spatstat::crossing.psp(main, k)
+      crs.point.start <- spatstat::crossing.psp(main, gbs.list[[start.gbs]])
+      data.frame(gbs.name = unique(spatstat::marks(k)), min = spatstat::crossdist(crs.point.start, crs.point))
+    }
   })
   
   gbs.order <- do.call(rbind, tmp)
@@ -227,7 +250,7 @@ convert.ijdata <- function(X, Accuracy = 0.1) {
   ## Parameters
   
   params <- X$parameters
-  params <- c(params, main.sl = main.sl, main.shift.x = main.shift.x, main.shift.y = main.shift.y, refl.x = refl.x, refl.y = refl.y)
+  params <- c(params, main.sl = main.sl, main.shift.x = main.shift.x, main.shift.y = main.shift.y, refl.x = refl.x, refl.y = refl.y, sec.type = sec.type)
   
   ## Return ####
   

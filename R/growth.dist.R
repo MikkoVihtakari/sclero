@@ -6,6 +6,7 @@
 #'   \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
 #'   \item \strong{"original"} or any other character/number. Only original ImageJ ROI coordinates.
 #' }
+#' @param type 
 #' @details This function is still under developemt and may not work as intended.
 #' @return A list of class \code{"growthDist"}. The first element (\code{$data}) contains a data.frame of growth measurements. The \code{$id} column gives the order of growth increments from the start point defined by the \code{main} axis. The \code{$gap} column gives the name of growth lines between which the growth is measured. Following columns give the growth measurements in units defined by the user in \code{\link{read.ijdata}} function (see the \code{scale} and \code{unit} arguments). The columns denoted as \code{.pr} give the percentage growth as compared to estimated total growth in the sample. The second list element contains \link[spatstat]{spatstat} segmented line (\code{psp}) patterns of the various growth measurement methods. List elements with \code{NULL} values were not applicable for the sample type. Abbreviations for measurement types are given in parenthesis. The types are:
 #' \itemize{
@@ -25,8 +26,8 @@
 #' @import spatstat plyr
 #' @export
 
-# coord.type = "scaled"
-growth.dist <- function(rawDist, coord.type = "scaled") {
+# coord.type = "scaled"; type = "auto"
+growth.dist <- function(rawDist, coord.type = "scaled", type = "auto") {
 
   ## Read in the data ####
 
@@ -93,10 +94,9 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   }
 
-
   ## Part 2 Manual growth axis ####
 
-  if(sec.type == "cross" & !is.null(growth)) {
+  if(sec.type == "cross" & !is.null(growth) & (type == "auto" | type == "man")) {
 
     tmp <- spatstat::crossing.psp(growth, gbs.all, details = TRUE)
     tmp.marks <- spatstat::marks(gbs.all)[spatstat::marks(tmp)$jB]
@@ -116,7 +116,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   ## Part 3 Main axis & caliber for along types ####
 
-  if(sec.type == "cross") {
+  if(sec.type == "cross" & (type == "auto" | type == "main")) {
 
     tmp <- spatstat::crossing.psp(main, gbs.all, details = TRUE)
     tmp.marks <- unique(spatstat::marks(gbs.all))
@@ -132,7 +132,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
     dat.main <- make.growth.data(growth.main)
 
-  } else if (sec.type == "along") { # along types
+  } else if (sec.type == "along" & (type == "auto" | type == "main")) { # along types
 
     #  k <- lines[6]
     meas.points <- lapply(lines, function(k) {
@@ -174,7 +174,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   ## Part 4 Minimum distance ####
 
-  if(sec.type == "cross") {
+  if(sec.type == "cross" & (type == "auto" | type == "min")) {
 
     tmp <- lapply(1:(nlevels(spatstat::marks(gbs.all))-1), function(i) {
 
@@ -213,7 +213,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   ## Part 5 Guided minimum distance ####
 
-  if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1)) {
+  if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1) & (type == "auto" | type == "ming")) {
     for(i in 2:(nlevels(spatstat::marks(gbs.all)))) {
 
       gbs1 <- gbs.all[spatstat::marks(gbs.all) == levels(spatstat::marks(gbs.all))[i-1]]
@@ -333,7 +333,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
   ## Part 6 Maximum distances ####
 
-  if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1)) {
+  if(sec.type == "cross" & (coord.type == "scaled" | coord.type == 1) & (type == "auto" | type == "max")) {
 
     # i = 1
     tmp <- lapply(1:(nlevels(spatstat::marks(gbs.all))-1), function(i) {
@@ -349,13 +349,13 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
 
       gbs1.mid <- spatstat::midpoints.psp(gbs1)
       gbs1.ppp <- spatstat::as.ppp(gbs1)
-      marks(gbs1.ppp) <- NULL
+      spatstat::marks(gbs1.ppp) <- NULL
       gbs1.ppp <- suppressWarnings(spatstat::superimpose(gbs1.mid, gbs1.ppp))
       gbs1.ppp <- gbs1.ppp[!spatstat::duplicated.ppp(gbs1.ppp)]
 
       gbs2.mid <- spatstat::midpoints.psp(gbs2)
       gbs2.ppp <- spatstat::as.ppp(gbs2)
-      marks(gbs2.ppp) <- NULL
+      spatstat::marks(gbs2.ppp) <- NULL
       gbs2.ppp <- suppressWarnings(spatstat::superimpose(gbs2.mid, gbs2.ppp))
       gbs2.ppp <- gbs2.ppp[!spatstat::duplicated.ppp(gbs2.ppp)]
 
@@ -405,8 +405,8 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
         marks = rep(unique(marks(gbs2)), nrow(tmp)-1),
         window = window)
 
-      gbs1.ppp <- pointsOnLines(gbs1)
-      gbs2.ppp <- pointsOnLines(gbs2)
+      gbs1.ppp <- spatstat::pointsOnLines(gbs1)
+      gbs2.ppp <- spatstat::pointsOnLines(gbs2)
 
       ## Distance calculations ###
 
@@ -415,15 +415,20 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
       p1 <- gbs1.ppp
       p2 <- pointsAlongLines(gbs2, y = p1)
 
-      line.alts <- spatstat::psp(x0 = p1$x,
-        x1 = p2$x,
-        y0 = p1$y,
-        y1 = p2$y,
-        window = window)
-
-      maxx1 <- line.alts[which.max(spatstat::lengths.psp(line.alts))]
-      marks(maxx1) <- paste(unique(spatstat::marks(gbs1)), unique(spatstat::marks(gbs2)), sep = "-")
-
+      if(p1$n == p2$n) {
+        line.alts <- spatstat::psp(x0 = p1$x,
+                                   x1 = p2$x,
+                                   y0 = p1$y,
+                                   y1 = p2$y,
+                                   window = window)
+        
+        maxx1 <- line.alts[which.max(spatstat::lengths.psp(line.alts))]
+        spatstat::marks(maxx1) <- paste(unique(spatstat::marks(gbs1)), unique(spatstat::marks(gbs2)), sep = "-")
+        
+      } else {
+        maxx1 <- NULL
+      }
+      
       ## Maximum along x-axis alt 2 ###
 
       dist2gbs1 <- distfun(gbs1.ppp)
@@ -498,7 +503,7 @@ growth.dist <- function(rawDist, coord.type = "scaled") {
     dat.maxg <- make.growth.data(growth.maxg)
 
 
-  } else if(sec.type == "along" & x$parameters$gbs.rois == "polyline") { ## ALONG TYPE
+  } else if(sec.type == "along" & x$parameters$gbs.rois == "polyline" & (type == "auto" | type == "max")) { ## ALONG TYPE
 
   tmp <- data.frame(gap = marks(gbs.all), dist = lengths.psp(gbs.all))
   tmp <- ddply(tmp, .(gap), summarise, max = sum(dist))

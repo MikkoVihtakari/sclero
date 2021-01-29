@@ -20,7 +20,7 @@
 #' @export
 #' 
 
-# rawDist = shell; file = NULL; path = path; names = "generate.invalid"; types = c("oval", "freehand", "rect")
+# file = NULL; path = path; names = "generate.invalid"; types = c("oval", "freehand", "rect")
 assign.size <- function(rawDist, file = NULL, path = NULL, names = "generate.invalid", types = c("oval", "freehand", "rect")){
   
   ## ####
@@ -31,7 +31,7 @@ assign.size <- function(rawDist, file = NULL, path = NULL, names = "generate.inv
   
   if(is.null(file)) file <- paste0(Z$sample.name, ".zip")
   if(is.null(path)) path <- getwd()
-  if(!file %in% dir(path)) stop(paste0("Cannot find ", file, ". Check getwd() or define file"))
+  if(!file %in% dir(path)) stop(paste0("Cannot find ", file, ". Check getwd() or define path"))
   
   X <- RImageJROI::read.ijzip(file.path(path,file), names = TRUE)
   
