@@ -4,9 +4,16 @@
 \alias{plot.growthDist}
 \title{Plot a growthDist object}
 \usage{
-\method{plot}{growthDist}(X, ..., growth.types = NULL,
-  sample.name = "keep", main.type = "all", color.palette = NULL,
-  highlight.gbs = NULL, highlight.col = "red")
+\method{plot}{growthDist}(
+  X,
+  ...,
+  growth.types = NULL,
+  sample.name = "keep",
+  main.type = "all",
+  color.palette = NULL,
+  highlight.gbs = NULL,
+  highlight.col = "red"
+)
 }
 \arguments{
 \item{X}{\code{\link[=growth.dist]{growthDist}} object}

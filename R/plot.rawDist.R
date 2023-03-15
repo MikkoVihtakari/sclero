@@ -34,7 +34,6 @@
 #' shell_map <- convert.ijdata(shellspots)
 #' plot(shell_map)
 #'
-#' @import spatstat
 #' @importFrom grDevices colorRampPalette
 #' @importFrom stats na.omit
 #' @importFrom graphics axis layout par plot points text
@@ -44,40 +43,42 @@
 # coord.type = "scaled"; sample.name = "keep"; type = "both"; spot.type = "id"; spot.size = 2; spot.color = NULL; main.type = "all"; growth.axis = "blue"; color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias=1)(100); highlight.gbs = NULL; highlight.col = "red"
 
 plot.rawDist <- function(X, ..., coord.type = "scaled", sample.name = "keep", spot.type = "id", spot.size = 2, spot.color = NULL, main.type = "all", growth.axis = "blue", color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias=1)(100), highlight.gbs = NULL, highlight.col = "red"){
-
-## Plot the sample map
-if(!all(names(X) %in% c("scaled", "original"))) {
   
-  output <- samplemap(x = X, ..., sname = sample.name, sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col)
+  # Plot the sample map
+  if(!all(c("scaled", "original") %in% names(X))) {
+
+    output <- samplemap(x = X, ..., sname = sample.name, sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col, values = X$values)
+
+  } else
+
+  if(coord.type == "scaled" | coord.type == 1) {
+    
+    output <- samplemap(x = X$scaled, ..., sname = sample.name, sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col, values = X$values)
+    
+  } else if(coord.type == "original" | coord.type == 2) {
+    
+    output <- samplemap(x = X$original, ..., sname = sample.name, sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col, values = X$values)
+    
+  } else {
+    
+    if(sample.name == "keep") sample.name <- X$scaled$sample.name
+    
+    par(mfrow = c(1, 2), cex.main = 0.8, mar=c(2.5,2.5,1,1))
+    
+    output <- samplemap(x = X$scaled, ..., sname = "Scaled", sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col)
+    
+    samplemap(x = X$original, ..., sname = "Original", sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col)
+    
+    par(cex.main = 1)
+    
+    title(sample.name, outer = TRUE, line = -1, cex = 1)
+    
+  }
   
-} else if(coord.type == "scaled" | coord.type == 1) {
   
-  output <- samplemap(x = X$scaled, ..., sname = sample.name, sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col)
-
-} else if(coord.type == "original" | coord.type == 2) {
+  ## Add legend
   
-  output <- samplemap(x = X$original, ..., sname = sample.name, sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col)
-
-} else {
-
-  if(sample.name == "keep") sample.name <- X$scaled$sample.name
-
-  par(mfrow = c(1, 2), cex.main = 0.8, mar=c(2.5,2.5,1,1))
-
-  output <- samplemap(x = X$scaled, ..., sname = "Scaled", sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col)
-
-  samplemap(x = X$original, ..., sname = "Original", sptype = spot.type, size = spot.size, scol = spot.color, mtype = main.type, gaxis = growth.axis, colpalette = color.palette, hlight = highlight.gbs, hlcol = highlight.col)
-
-  par(cex.main = 1)
-
-  title(sample.name, outer = TRUE, line = -1, cex = 1)
-
-}
-
-
-## Add legend
-
-if(spot.type == "value" | spot.type == "idvalue") {
-par(mar=c(1,0.5,3,2))
-   plot(output$colmap, vertical = TRUE, las = 2, main = X$value.name, cex = 0.1)}
+  if(spot.type == "value" | spot.type == "idvalue") {
+    par(mar=c(1,0.5,3,2))
+    plot(output$colmap, vertical = TRUE, las = 2, main = X$value.name, cex = 0.1)}
 }

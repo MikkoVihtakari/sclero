@@ -26,7 +26,7 @@
 #' 
 #' \code{\link{order.ijdata}} for ordering and subsetting \code{read.ijdata} output.
 #' 
-#' \code{\link{convert.ijdata}} for converting the coordinate information to \link[spatstat.geom]{spatstat.geom} point patterns. 
+#' \code{\link{convert.ijdata}} for converting the coordinate information to \link[spatstat]{spatstat} point patterns. 
 #' 
 #' \code{\link{plot.spotDist}} for plotting.
 #' 
@@ -36,14 +36,14 @@
 #' shell_map <- convert.ijdata(shellspots)
 #' x <- spot.dist(shell_map)
 #' plot(x) 
-#' @import spatstat.geom plyr
+#' @import spatstat plyr
 #' @export
 
 ## Debug paramters
 # rawDist <- dt
-# coord.type = "scaled"; sample.name = NULL; run.ae = TRUE; use.centroids = TRUE
+# coord.type = "original"; sample.name = NULL; run.ae = TRUE; use.centroids = TRUE
 
-spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae = TRUE, use.centroids = TRUE){
+spot.dist2 <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae = TRUE, use.centroids = TRUE){
   
   
   #####################################
@@ -52,164 +52,83 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
   # Function 1. Cuts main axis (dist.lines) into gaps and generates marks
   seg.fun <- function(z) {
     zz <- z[match(dist.lines$line[dist.lines$line %in% z$marks], z$marks),]
-    marks <- paste(spatstat.geom::marks(zz)[1:npoints(zz)-1], spatstat.geom::marks(zz)[2:npoints(zz)], sep = "-")
-    xx <- spatstat.geom::coords(zz)$x
-    yy <- spatstat.geom::coords(zz)$y
-    spatstat.geom::psp(x0 = xx[1:length(xx)-1], x1 = xx[-1], y0 = yy[1:length(yy)-1], y1 = yy[-1], window = window, marks = marks)
+    marks <- paste(spatstat::marks(zz)[1:npoints(zz)-1], spatstat::marks(zz)[2:npoints(zz)], sep = "-")
+    xx <- spatstat::coords(zz)$x
+    yy <- spatstat::coords(zz)$y
+    spatstat::psp(x0 = xx[1:length(xx)-1], x1 = xx[-1], y0 = yy[1:length(yy)-1], y1 = yy[-1], window = window, marks = marks)
   }
   
   # Function 2. Calculates spot distance along main axis
   
   # spots = spot.area$centroids; gbs = gbs; lines = lines; dist.main = dist.main; l.1st = l.1st
-  spot.dist.calculation <- function(spots, gbs, lines, dist.main, l.1st) {
+  spot.dist.calculation2 <- function(spots, gbs, lines, dist.main, l.1st, gbs.owins) {
     
-    ## Part 1. Calculate shortest distance (c.dist) from a hole the closest subannual line (close1) ####
+    ## Part 1. Calculate in which growth band gap the spots lie in
     
-    dat <- list()
-    for(l in 1:length(spots)){
-      d <- data.frame(spot = spots[[l]]$marks)
+    dat <- lapply(seq_along(spots), function(l) {
       
-      for(j in 1:nlines){
-        temp <- spatstat.geom::nncross(spots[[l]], gbs[gbs$marks == lines[j]])
-        colnames(temp) <- c(as.character(lines[j]), "which")
-        d <- cbind(d, temp[1])
-      }
+      tmp <- lapply(seq_along(gbs.owins), function(i) {
+        ifelse(inside.owin(x = spots[[l]], w = gbs.owins[[i]]), names(gbs.owins)[i], NA)
+      })
       
-      tp <- d[!colnames(d) %in% colnames(d)[1]]
+      tmp <- as.data.frame(tmp, col.names = seq_along(gbs.owins))
       
-      d <- cbind(d, close1 = apply(tp, 1, function(x) names(which.min(x))), stringsAsFactors = FALSE)
-      d <- cbind(d, c.dist = apply(tp, 1, function(x) (min(x))))
-      
-      d <- d[!colnames(d) %in% lines]
-      dat <- c(dat, list(d))
-    }
-    
-    names(dat) <- names(spots)
-    d <- dat
-    
-    ## Part 2. Calculate whether spots are occurring after or before (from l.1st) the closest sub-annual line
-    
-    # Calculate shortest distance from each hole to the 1st growth line (l.1st, margin). Called start here because photographs should be marked against direction of growth.
-    
-    tmp <- lapply(spots, function(x) spatstat.geom::nncross(x, l.1st)[,1]) 
-    d <- mapply(`[<-`, d, "dist.1st", value = tmp, SIMPLIFY = FALSE)
-    
-    # Calculate the closest point along the closest growth line ($close1) for each hole. Then calculate the distance from this point to the 1st growth line (l.1st). This distance is called dist.cross. If the logic behind this is hard to grasp, try plotting 'tmp' after project2segment part.
-    
-    tmp.l <- lapply(seq_along(spots), function(k) {
-      tmp <- c()
-      for(j in 1:spatstat.geom::npoints(spots[[k]])) {
-        tmp <- spatstat.geom::superimpose(tmp, spatstat.geom::project2segment(spots[[k]][j], gbs[gbs$marks == d[[k]]$close1[j]])$Xproj)
-      }
-      spatstat.geom::nncross(tmp, l.1st)[,1]
-    })
-    
-    d <- mapply(`[<-`, d, 'dist.cross', value = tmp.l, SIMPLIFY = FALSE)
-    
-    # If $dist.1st > $dist.cross, the sample spot occurs after the closest growth line ($close1). If the opposite, then the sample spot occurs before $close1.
-    
-    tmp <- lapply(d, function(x) factor(ifelse(x$dist.1st >= x$dist.cross, "aft", "bef"))) 
-    # tmp <- lapply(d, function(x) factor(ifelse(x$dist.cross == 0, "bef0", ifelse(x$dist.1st >= x$dist.cross, "aft", "bef"))))
-    d <- mapply(`[<-`, d, 'location', value = tmp, SIMPLIFY = FALSE)
-    
-    dat <- d
-    
-    ## Part 3. Calculate the gap between which growth bands each sampling spot is located.
-    
-    # dat <- lapply(seq_along(dat), function(i){
-    #   tmp <- unlist(ifelse(dat[[i]]$location  == "bef0", 
-    #                        paste("before", dist.main[1, "line"], sep = "_"),
-    #                        ifelse(dat[[i]]$location  == "aft", 
-    #                               sapply(seq_along(dat[[i]]$location), function(k) {
-    #                                 grep(paste("^", as.character(dat[[i]]$close1)[k], "-", sep = ""), dist.main$gap, value = TRUE)}),
-    #                               sapply(seq_along(dat[[i]]$location), function(k) {
-    #                                 grep(paste("-", as.character(dat[[i]]$close1)[k], "$", sep = ""), dist.main$gap, value = TRUE)}))
-    #   ))
-    #   dat[[i]]$gap <- tmp
-    #   dat[[i]]})
-    
-    dat <- lapply(seq_along(dat), function(i){
-      tmp <- unlist(ifelse(dat[[i]]$location  == "aft", 
-                           sapply(seq_along(dat[[i]]$location), function(k) {
-                             grep(paste("^", as.character(dat[[i]]$close1)[k], "-", sep = ""), dist.main$gap, value = TRUE)}),
-                           sapply(seq_along(dat[[i]]$location), function(k) {
-                             grep(paste("-", as.character(dat[[i]]$close1)[k], "$", sep = ""), dist.main$gap, value = TRUE)})))
-      dat[[i]]$gap <- tmp
-      dat[[i]]})
-    
-    names(dat) <- names(spots)
-    
-    ## Part 4. Shortest distance to the 2nd growth band in the gap the spot is located
-    
-    # Locate the 2nd closest subannual line
-    # dat <- lapply(dat, function(i) {
-    #   i$close2 <- sapply(seq_along(i$close1), function(k) {
-    #     tmp <- unlist(strsplit(i$gap[k], "-"))
-    #     out <- tmp[!tmp %in% i$close1[k]]
-    #     
-    #     if(grepl("before_", out)) {
-    #       NA
-    #     } else {
-    #       out
-    #     }
-    #   })
-    #   i
-    # })
-    
-    dat <- lapply(dat, function(i){
-      i$close2 <- sapply(seq_along(i$close1), function(k) {
-        tmp <- unlist(strsplit(i$gap[k], "-"))
-        tmp[!tmp %in% i$close1[k]]})
-      i
-    })
-    
-    # Calculate the distance from each hole to the 2nd closest growth band
-    
-    dat <- lapply(seq_along(dat), function(i) {
-      dat[[i]]$c2.dist <- sapply(seq_along(dat[[i]]$close2), function(k) {
-        if(is.na(dat[[i]]$close2[k])) {
+      tmp <- apply(tmp, 1, function(j) {
+        out <- j[!is.na(j)]
+        
+        if(length(out) > 1) {
+          message(paste0("Multiple growth bands", " (", paste(out, collapse = ", "), ") ", "matched for ", names(spots)[l], ". Selected the first one"))
+          out[1]
+        } else if(length(out) == 0) {
           NA
         } else {
-          nncross(spots[[i]][spots[[i]]$marks == dat[[i]]$spot[k]], gbs[gbs$marks == dat[[i]]$close2[k]])$dist
+          out
         }
       })
-      dat[[i]]
+      
+      tmp2 <- strsplit(tmp, "-")
+      
+      return(data.frame(spot = spots[[l]]$marks, gap = tmp, gbs1 = sapply(tmp2, "[", 1), gbs2 = sapply(tmp2, "[", 2)))
     })
     
     names(dat) <- names(spots)
     
-    ## Part 5. Distance ratio to the closest or 2nd closest growth band ####
+    ## Part 2. Calculate distance to the encompassing growth bands
     
-    dat <- lapply(dat, function(i) {
-      i$dist.ratio <- ifelse(i$location == "aft", i$c.dist/(i$c.dist + i$c2.dist), i$c2.dist/(i$c.dist + i$c2.dist))
-      i
+    dat <- lapply(seq_along(spots), function(l) {
+      
+      out <- lapply(1:nrow(dat[[l]]), function(i) {
+        tmp <- dat[[l]][i,]
+        
+        if(is.na(tmp$gap)) {
+          tmp$gbs1.dist <- NA
+          tmp$gbs2.dist <- NA
+          tmp$dist.ratio <- NA
+        } else {
+          tmp$gbs1.dist <- spatstat::nncross(spots[[l]][i], gbs[gbs$marks == tmp$gbs1])$dist
+          tmp$gbs2.dist <- spatstat::nncross(spots[[l]][i], gbs[gbs$marks == tmp$gbs2])$dist
+          tmp$dist.ratio <- tmp$gbs1.dist/(tmp$gbs1.dist+tmp$gbs2.dist)
+        }
+        
+        tmp
+      })
+      
+      do.call(rbind, out)
     })
     
-    ## Part 6. Compile dat and dist.main datasets 
+    names(dat) <- names(spots)
+    
+    ## Part 3. Compile dat and dist.main datasets 
     
     dat <- lapply(dat, function(i) merge(i, dist.main[-1], by = "gap", all.x = TRUE, sort = FALSE))
     
-    ## Part 7. Calculate distance of spots along the main axis
+    ## Part 4. Calculate distance of spots along the main axis
     
     tmp <- lapply(dat, function(i) i$dist0 + i$gap.l.main*i$dist.ratio)
-    dat <- mapply(`[<-`, dat, 'spot.dist.type1', value = tmp, SIMPLIFY = FALSE)
+    dat <- mapply(`[<-`, dat, 'spot.dist', value = tmp, SIMPLIFY = FALSE)
     
-    ## Part 9. Remove spots before margin
+    ## Part 5. Return
     
-    dat <- lapply(dat, function(k) {
-      # tmp <- k[k$c.dist == k$dist.1st,]
-      # tmp$gap.pr <- 100*(tmp$c.dist + tmp$c2.dist)/tmp$gap.l.main
-      # tmp
-       
-      k[k$c.dist == k$dist.1st & (k$c.dist + k$c2.dist)/k$gap.l.main > 1.4, "spot.dist.type1"] <- NA
-      k
-    })
-    
-    ## Part 10. Reorganize dat
-    
-    colord <- c("spot", "gap", "location", "close1", "c.dist", "close2", "c2.dist", "dist.1st", "dist.cross", "gap.l.main", "dist0", "dist.ratio", "spot.dist.type1")
-    
-    dat <- lapply(dat, function(k) k[colord])
     return(dat)
   }
   
@@ -219,6 +138,7 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
   ## Part 1. Define parameters 
   ## Spots and holes are used as synonyms due to historical coding reasons.
   
+  ## Part 1.1 Definitions
   if(all(c("scaled", "original") %in% names(rawDist))) {
     
     if(coord.type == "scaled" | coord.type == 1) {
@@ -313,12 +233,42 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
   dist.main <- merge(dist.main, dist.lines, by = "line", all = TRUE, sort = FALSE)
   dist.main <- dist.main[c("line", "gap", "gap.l.main", "dist0")]
   
-  ## Part 4. Align the spots along main ####
+  
+  ## Part 4 owins from growth bands to detect in which gap the sample spots are located
+  
+  gbs.owins <- lapply(1:(nrow(dist.lines)-1), function(i) {
+    # print(i)
+    
+    l1 <- spatstat::as.ppp(gbs[spatstat::marks(gbs) %in% dist.lines$line[i]])
+    l2 <- spatstat::as.ppp(gbs[spatstat::marks(gbs) %in% dist.lines$line[i+1]])
+    
+    rev2 <- nncross(l1[l1$n], l2[c(1, l2$n)])$which == 2
+    
+    if(rev2) {
+      tmp <- unique(data.frame(x = c(l1$x, rev(l2$x)), y = c(l1$y, rev(l2$y))))
+    } else {
+      tmp <- unique(data.frame(x = c(l1$x, l2$x), y = c(l1$y, l2$y)))
+    }       
+    
+    if(is.clockwise(tmp)) { # Turn anti-clockwise as required by owin
+      tmp$x <- rev(tmp$x)
+      tmp$y <- rev(tmp$y)
+    }
+    
+    owin(poly = tmp)
+  })
+  
+  names(gbs.owins) <- sapply(1:(nrow(dist.lines)-1), function(i) paste(dist.lines$line[i], dist.lines$line[i+1], sep = "-"))
+  
+  # plot(spots[[1]])
+  # lapply(gbs.owins, function(k) plot(k, add = T))
+  # plot(gbs.owins[[10]], add = T, col = "blue")
+  ## Part 5. Align the spots along main ####
   
   if(exists("spot.area") & use.centroids){
-    dat <- spot.dist.calculation(spots = spot.area$centroids, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st)
+    dat <- spot.dist.calculation2(spots = spot.area$centroids, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st, gbs.owins = gbs.owins)
   } else {
-    dat <- spot.dist.calculation(spots = spots, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st)
+    dat <- spot.dist.calculation2(spots = spots, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st, gbs.owins = gbs.owins)
   }
   
   #########################################
@@ -419,8 +369,8 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
     
     ## Part 1.8 Calculate the cross distance for each point
     
-    start.point.dat <- spot.dist.calculation(spots = start.points, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st)
-    end.point.dat <- spot.dist.calculation(spots = end.points, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st)
+    start.point.dat <- spot.dist.calculation2(spots = start.points, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st, gbs.owins = gbs.owins)
+    end.point.dat <- spot.dist.calculation2(spots = end.points, gbs = gbs, lines = lines, dist.main = dist.main, l.1st = l.1st, gbs.owins = gbs.owins)
     
     area.dat <- list(centroids = spot.area$centroids, start.points = start.points, end.points = end.points, spot.dat = spot.area$spot.dat)
   }
@@ -435,7 +385,7 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
   # Short output
   if(exists("spot.area")){
     output <- lapply(seq_along(dat), function(i) {
-      cols <- c("spot", "spot.dist.type1")
+      cols <- c("spot", "spot.dist")
       tmp <- dat[[i]][cols]
       colnames(tmp) <- c("spot", "dist")
       tmp2 <- start.point.dat[[i]][cols]
@@ -451,7 +401,7 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
     names(output) <- names(dat)
   } else {
     output <- lapply(dat, function(k) {
-      cols <- c("spot", "spot.dist.type1")
+      cols <- c("spot", "spot.dist")
       tmp <- k[cols]
       colnames(tmp) <- c("spot", "dist")
       tmp})  
@@ -464,7 +414,7 @@ spot.dist <- function(rawDist, coord.type = "scaled", sample.name = NULL, run.ae
       test <- which(output[[i]]$dist > output[[i]]$dist.max)
       if(length(test) != 0) warning(paste0(" dist.max < dist in ", names(output[i]), " spot ", output[[i]]$spot[test], ". Check growth lines."))})
   }
-  
+  x$gbs.owins <- gbs.owins
   x$main.type <- type
   #x$alignment.type <- alignment
   x$gb.projections <- int

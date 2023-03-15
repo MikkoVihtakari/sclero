@@ -2,7 +2,7 @@
 % Please edit documentation in R/convert.ijdata.R
 \name{convert.ijdata}
 \alias{convert.ijdata}
-\title{Convert IJDATA object to a list of spatstat objects}
+\title{Convert IJDATA object to a list of spatstat.geom objects}
 \usage{
 convert.ijdata(X, Accuracy = 0.1)
 }
@@ -12,10 +12,10 @@ convert.ijdata(X, Accuracy = 0.1)
 \item{Accuracy}{numeric value defining the number to round to. See \code{\link{round_any}}.}
 }
 \value{
-Returns a list of class \code{rawDist}, which contains \link[spatstat]{spatstat} point patterns. The returned \code{rawDist} can be plotted using the generic plotting command.
+Returns a list of class \code{rawDist}, which contains \link[spatstat.geom]{spatstat.geom} point patterns. The returned \code{rawDist} can be plotted using the generic plotting command.
 }
 \description{
-Converts an \code{\link[=read.ijdata]{IJDATA}} to a list of \link[spatstat]{spatstat} patterns ready for \link[=plot.rawDist]{plotting} or \link[=spot.dist]{sample spot alignment}.
+Converts an \code{\link[=read.ijdata]{IJDATA}} to a list of \link[spatstat.geom]{spatstat.geom} patterns ready for \link[=plot.rawDist]{plotting} or \link[=spot.dist]{sample spot alignment}.
 }
 \examples{
 data(shellspots)

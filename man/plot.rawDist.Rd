@@ -4,11 +4,20 @@
 \alias{plot.rawDist}
 \title{Plot rawDist object}
 \usage{
-\method{plot}{rawDist}(X, ..., coord.type = "scaled",
-  sample.name = "keep", spot.type = "id", spot.size = 2,
-  spot.color = NULL, main.type = "all", growth.axis = "blue",
-  color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"),
-  bias = 1)(100), highlight.gbs = NULL, highlight.col = "red")
+\method{plot}{rawDist}(
+  X,
+  ...,
+  coord.type = "scaled",
+  sample.name = "keep",
+  spot.type = "id",
+  spot.size = 2,
+  spot.color = NULL,
+  main.type = "all",
+  growth.axis = "blue",
+  color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias = 1)(100),
+  highlight.gbs = NULL,
+  highlight.col = "red"
+)
 }
 \arguments{
 \item{X}{\code{\link[=convert.ijdata]{rawDist}} object}

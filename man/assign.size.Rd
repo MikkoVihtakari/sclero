@@ -4,8 +4,14 @@
 \alias{assign.size}
 \title{Assign spot sizes to 'rawDist' objects for estimating spatial extent of sample averaging error.}
 \usage{
-assign.size(rawDist, file = NULL, path = NULL,
-  names = "generate.invalid", types = c("oval", "freehand", "rect"))
+assign.size(
+  rawDist,
+  file = NULL,
+  path = NULL,
+  names = "generate.invalid",
+  types = c("oval", "freehand", "rect"),
+  scaled = FALSE
+)
 }
 \arguments{
 \item{rawDist}{\code{\link[=convert.ijdata]{rawDist}} object to which the values should be assigned.}
@@ -17,6 +23,8 @@ assign.size(rawDist, file = NULL, path = NULL,
 \item{names}{optional. A character argument specifying how the names of \code{spots} should be generated. See \code{\link{read.ijdata}} for details. Defaults to "generate.invalid".}
 
 \item{types}{optional. A character vector specifying the \code{strType} of ROI objects to be considered as sample spots (see \code{\link{plot.ijroi}} for possible pattern types). Defaults to \code{c("oval", "freehand", "rect")} meaning that oval and freehand selections, as well as rectangle tool selections will be used to calculate the spatial extent of sample spots.}
+
+\item{scaled}{logical indicating whether to use scaled (\code{TRUE}) or original (\code{FALSE}) coordinates. Does not work well for scaled coordinates yet.}
 }
 \value{
 Returns a list of class 'rawDist' with a list of \code{\link{ppp}} objects containing locations of sample spot centroids and a list of \code{\link{hyperframe}}s containing spot size information.

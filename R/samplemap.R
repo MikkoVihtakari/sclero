@@ -11,15 +11,16 @@
 #' @param colpalette equals to \code{\link[=plot.rawDist]{color.palette}}
 #' @param hlight equals to \code{\link[=plot.rawDist]{highlight.gbs}}
 #' @param hlcol equals to \code{\link[=plot.rawDist]{highlight.col}}
+#' @param values the location of \code{\link{assign.value}} data.
 #' @author Mikko Vihtakari
 #' @keywords internal
 #' @seealso \code{\link{plot.rawDist}}, \code{\link{plot.spotDist}}
-#' @import spatstat
+#' @import spatstat.geom
 #' @export
 
-# x = X$scaled; sname = sample.name; sptype = spot.type; size = spot.size; scol = spot.color; mtype = main.type; gaxis = growth.axis; colpalette = color.palette; hlight = highlight.gbs; hlcol = highlight.col
+# x = X$scaled; sname = sample.name; sptype = spot.type; size = spot.size; scol = spot.color; mtype = main.type; gaxis = growth.axis; colpalette = color.palette; hlight = highlight.gbs; hlcol = highlight.col; values = X$values
 
-samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalette, hlight, hlcol){
+samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalette, hlight, hlcol, values = NULL){
   
   ## Define the unit for axes ####
   unit <- x$unit
@@ -27,13 +28,13 @@ samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalett
   ## Standard plot arguments (allows edits using the ...) ###
   
   arguments <- list(x = x$window$xrange, 
-    y = x$window$yrange,
-    type = "n",
-    axes = F, 
-    ..., 
-    asp = 1, 
-    xlab = paste0("x ", "(", unit, ")"), 
-    ylab = paste0("y ", "(", unit, ")")
+                    y = x$window$yrange,
+                    type = "n",
+                    axes = F, 
+                    ..., 
+                    asp = 1, 
+                    xlab = paste0("x ", "(", unit, ")"), 
+                    ylab = paste0("y ", "(", unit, ")")
   )
   
   arguments <- arguments[!duplicated(names(arguments))]
@@ -109,15 +110,14 @@ samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalett
   
   if(sptype %in% c("value", "idvalue")) {
     
-    if(all(unlist(lapply(x$values, is.null)))) stop("'values' for the color mapping must be specified. See ?assign.value")
+    if(all(unlist(lapply(values, is.null)))) stop("'values' for the color mapping must be specified. See ?assign.value")
     color.spec = TRUE
-    colmap <- colourmap(colpalette, range = range(unlist(lapply(x$values, function(k) range(k[,2], na.rm = TRUE))), na.rm = TRUE))
+    colmap <- colourmap(colpalette, range = range(unlist(lapply(values, function(k) range(k[,2], na.rm = TRUE))), na.rm = TRUE))
     COLOR <- lapply(seq_along(x$spots), function(i){
-      ifelse(is.na(x$values[[i]][,2]), "white", colmap(x$values[[i]][,2]))
+      ifelse(is.na(values[[i]][,2]), "white", colmap(values[[i]][,2]))
     })
     
   } else {
-    
     color.spec = FALSE
   }
   
@@ -129,10 +129,9 @@ samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalett
   
   if(!is.null(x$spots)) {
     
-    if(size == "actual") {
+    if(size == "actual" & !is.null(x$spot.area$spot.dat)) {
       
-      ## Plot actual sample spot size (if size == TRUE)
-      if(is.null(x$spot.area$spot.dat)) stop("x does not contain spot size information. See ?assign.size")
+      ## Plot actual sample spot size (if size == "actual")
       
       if(color.spec) {
         lapply(seq_along(x$spot.area$spot.dat), function(i) {
@@ -142,24 +141,29 @@ samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalett
           lapply(k$spot.owins, function(j) plot(j, add = TRUE))})
       }
       if(id.spec) lapply(seq_along(spots), function(i){
-        text(spatstat::coords(spots[[i]])[,1], spatstat::coords(spots[[i]])[,2], spatstat::marks(spots[[i]]), col = hole.cols[i], cex = 0.6, font = 2)
+        text(spatstat.geom::coords(spots[[i]])[,1], spatstat.geom::coords(spots[[i]])[,2], spatstat.geom::marks(spots[[i]]), col = hole.cols[i], cex = 0.6, font = 2)
       })
       
     } else {
       
+      if(size == "actual" & is.null(x$spot.area$spot.dat)) {
+        warning("x does not contain spot size information. See ?assign.size. Plotting without size information.")  
+        size <- 2
+      }
+      
       ## Other sample spot plotting operations
       if(color.spec) {
         lapply(seq_along(spots), function(i) {
-          points(x = spatstat::coords(spots[[i]])[,1], y = spatstat::coords(spots[[i]])[,2], bg = COLOR[[i]], cex = size, pch = 21)
+          points(x = spatstat.geom::coords(spots[[i]])[,1], y = spatstat.geom::coords(spots[[i]])[,2], bg = COLOR[[i]], cex = size, pch = 21)
         })
       } else {
         lapply(seq_along(spots), function(i) {
-          points(x = spatstat::coords(spots[[i]])[,1], y = spatstat::coords(spots[[i]])[,2], cex = size, pch = 21)
+          points(x = spatstat.geom::coords(spots[[i]])[,1], y = spatstat.geom::coords(spots[[i]])[,2], cex = size, pch = 21)
         })
       }
       if(id.spec) {
         lapply(seq_along(spots), function(i) {
-          text(spatstat::coords(spots[[i]])[,1], spatstat::coords(spots[[i]])[,2], spatstat::marks(spots[[i]]), col = hole.cols[i], cex = 0.6, font = 2)
+          text(spatstat.geom::coords(spots[[i]])[,1], spatstat.geom::coords(spots[[i]])[,2], spatstat.geom::marks(spots[[i]]), col = hole.cols[i], cex = 0.6, font = 2)
         })
       }
     }
@@ -173,7 +177,7 @@ samplemap <- function(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalett
   
   if(mtype %in% c("all", "ends")) {
     text(x$start.main$x, x$start.main$y, x$start.main$marks, col = "dark green", font = 2)
-    text(coords(x$end.main)[,1], coords(x$end.main)[,2], x$end.main$marks, col = "dark green", font = 2)
+    text(spatstat.geom::coords(x$end.main)[,1], spatstat.geom::coords(x$end.main)[,2], x$end.main$marks, col = "dark green", font = 2)
   }
   
   if(color.spec) output <- list(spots = spots, hole.cols = hole.cols, colmap = colmap) else output <- list(spots = spots, hole.cols = hole.cols)

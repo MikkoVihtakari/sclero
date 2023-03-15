@@ -4,10 +4,20 @@
 \alias{read.ijdata}
 \title{Read ImageJ zip file containing several ROI files and extract coordinate information.}
 \usage{
-read.ijdata(X, spots = NULL, gbs = NULL, main = NULL,
-  growth = NULL, names = "generate.invalid", spot.names = NULL,
-  gbs.names = NULL, main.name = "main", sample.name = NULL,
-  scale = 1, unit = NULL)
+read.ijdata(
+  X,
+  spots = NULL,
+  gbs = NULL,
+  main = NULL,
+  growth = NULL,
+  names = "generate.invalid",
+  spot.names = NULL,
+  gbs.names = NULL,
+  main.name = "main",
+  sample.name = NULL,
+  scale = 1,
+  unit = NULL
+)
 }
 \arguments{
 \item{X}{a character string defining the name (including extension) or file path of an ImageJ zip file. Alternatively an \code{\link[=read.ijzip]{ijzip}} object.}

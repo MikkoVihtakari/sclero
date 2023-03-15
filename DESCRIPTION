@@ -1,7 +1,7 @@
 Package: sclero
 Title: Measure Growth Patterns and Align Sampling Spots in Photographs
 Version: 0.4.0
-Date: 2021-01-29
+Date: 2021-02-02
 Authors@R: c(person("Mikko", "Vihtakari", role=c("aut", "cre"), email="mikko.vihtakari@gmail.com"))
 Maintainer: Mikko Vihtakari <mikko.vihtakari@gmail.com>
 Description: Provides functions to measure growth patterns and align
@@ -11,9 +11,10 @@ Depends:
     R (>= 3.0),
     RImageJROI,
     spatstat,
+    spatstat.geom,
     plyr
 License: GPL-3
 LazyData: true
 URL: https://github.com/MikkoVihtakari/sclero
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.3
 Encoding: UTF-8

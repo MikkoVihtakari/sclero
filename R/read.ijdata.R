@@ -68,10 +68,13 @@ if(class(X) == "character") {
   if(length(tmp) != 1) stop("Something wrong with the file name")
   if(length(tmp) == 1 & tmp==X){
   dat <- RImageJROI::read.ijzip(X, names = TRUE)
+  filepath <- X
     }
   } else {
     if(class(X) == "ijzip") {
-      dat <- X} else {
+      dat <- X
+      filepath <- NULL
+      } else {
         stop("X is not path to a ImageJ .zip file nor a ijzip object")
   }}
 
@@ -159,7 +162,6 @@ gbs.nms <- ifelse(is.null(gbs.names) | ncol(gbs.x) != length(gbs.names) & names 
 ## X names
 colnames(gbs.x) <- ijdata.define.names(names = gbs.nms, types = types, rois = gbss, data = gbs.x, type.names = gbs.names)
 
-
 ## Find coordinates, y-axis
 
 tmp <-  lapply(gbss, function(i) dat[[i]]$coords[,2]/scale) # Use scale argument to scale coordinates
@@ -232,7 +234,7 @@ if (is.null(sample.name)) {
 ############################
 ## 5. Compile to a list ####
 
-dat <- list(spots.x = spots.x, spots.y = spots.y, gbs.x = gbs.x, gbs.y = gbs.y, main.x = main.x, main.y = main.y, growth.x = growth.x, growth.y = growth.y, sample.name = name, scaling.factor = scale, unit = unit, parameters = params)
+dat <- list(spots.x = spots.x, spots.y = spots.y, gbs.x = gbs.x, gbs.y = gbs.y, main.x = main.x, main.y = main.y, growth.x = growth.x, growth.y = growth.y, sample.name = name, scaling.factor = scale, unit = unit, parameters = params, file.path = filepath)
 
 class(dat) <- "IJDATA"
 

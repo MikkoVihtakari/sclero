@@ -4,7 +4,7 @@
 \alias{growth.dist}
 \title{Calculate growth using a variety of measurement techniques}
 \usage{
-growth.dist(rawDist, coord.type = "scaled")
+growth.dist(rawDist, coord.type = "scaled", type = "auto")
 }
 \arguments{
 \item{rawDist}{a \code{\link[=convert.ijdata]{rawDist}} object for which the alignment should be done.}
@@ -14,6 +14,8 @@ growth.dist(rawDist, coord.type = "scaled")
   \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
   \item \strong{"original"} or any other character/number. Only original ImageJ ROI coordinates.
 }}
+
+\item{type}{}
 }
 \value{
 A list of class \code{"growthDist"}. The first element (\code{$data}) contains a data.frame of growth measurements. The \code{$id} column gives the order of growth increments from the start point defined by the \code{main} axis. The \code{$gap} column gives the name of growth lines between which the growth is measured. Following columns give the growth measurements in units defined by the user in \code{\link{read.ijdata}} function (see the \code{scale} and \code{unit} arguments). The columns denoted as \code{.pr} give the percentage growth as compared to estimated total growth in the sample. The second list element contains \link[spatstat]{spatstat} segmented line (\code{psp}) patterns of the various growth measurement methods. List elements with \code{NULL} values were not applicable for the sample type. Abbreviations for measurement types are given in parenthesis. The types are:

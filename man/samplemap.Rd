@@ -4,8 +4,20 @@
 \alias{samplemap}
 \title{Common plotting function for plot.rawDist and plot.spotDist functions}
 \usage{
-samplemap(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalette,
-  hlight, hlcol)
+samplemap(
+  x,
+  ...,
+  sname,
+  sptype,
+  size,
+  scol,
+  mtype,
+  gaxis,
+  colpalette,
+  hlight,
+  hlcol,
+  values = NULL
+)
 }
 \arguments{
 \item{x}{\link[=convert.ijdata]{rawDist}} or \code{\link[=spot.dist]{spotDist} object.}
@@ -29,6 +41,8 @@ samplemap(x, ..., sname, sptype, size, scol, mtype, gaxis, colpalette,
 \item{hlight}{equals to \code{\link[=plot.rawDist]{highlight.gbs}}}
 
 \item{hlcol}{equals to \code{\link[=plot.rawDist]{highlight.col}}}
+
+\item{values}{the location of \code{\link{assign.value}} data.}
 }
 \description{
 Used as an internal function to make the code more comprehensible. See \code{\link{plot.rawDist}} and \code{\link{plot.spotDist}} for plotting \code{\link[=convert.ijdata]{rawDist}} and \code{\link[=spot.dist]{spotDist}} objects, respectively.

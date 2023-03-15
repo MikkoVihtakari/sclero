@@ -4,7 +4,9 @@
 \name{shellsizes}
 \alias{shellsizes}
 \title{Coordinates of sample spots together with spot size information and growth lines along a bivalve mollusk shell section}
-\format{\code{rawDist} object. A list containing \link[spatstat]{spatstat} point and line patterns as well as owin objects defining the sample spot, growth line, distance axis and sample spot size coordinates.}
+\format{
+\code{rawDist} object. A list containing \link[spatstat]{spatstat} point and line patterns as well as owin objects defining the sample spot, growth line, distance axis and sample spot size coordinates.
+}
 \usage{
 data(shellsizes)
 }

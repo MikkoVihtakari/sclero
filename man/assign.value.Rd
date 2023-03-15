@@ -4,7 +4,7 @@
 \alias{assign.value}
 \title{Assign values to 'rawDist' objects for plotting.}
 \usage{
-assign.value(rawDist, value, value.name = NULL)
+assign.value(rawDist, value, value.name = NULL, coord.type = "scaled")
 }
 \arguments{
 \item{rawDist}{\code{\link[=convert.ijdata]{rawDist}} object to which the values should be assigned.}
@@ -12,6 +12,12 @@ assign.value(rawDist, value, value.name = NULL)
 \item{value}{a \code{\link{data.frame}} or list of data.frames of the same length than spot spequences (\code{\link[=read.ijdata]{spots}}). Each \code{data.frame} has to have identical length to spots. First column specifies the order. Second column containing the values (see Details).}
 
 \item{value.name}{a character or function defining the name for the assigned value. Can be \code{\link[base]{expression}}}
+
+\item{coord.type}{A character or numeric argument defining the coordinate type to for assignment. Used only to acquire spot sequence names. Alternatives:
+\itemize{
+  \item \strong{"scaled"} or \strong{1}. Only scaled coordinates.
+  \item \strong{"original"} or \strong{2}. Only original ImageJ ROI coordinates.
+  }}
 }
 \value{
 Returns a list of class \code{\link[=convert.ijdata]{rawDist}} containing spot value information.

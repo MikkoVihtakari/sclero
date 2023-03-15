@@ -4,8 +4,15 @@
 \alias{create.rawDist}
 \title{Create rawDist data from arbitary coordinates}
 \usage{
-create.rawDist(spots, gbs, main, spot.seq.names = NULL,
-  sample.name = NULL, scaling.factor = 1, unit = NULL)
+create.rawDist(
+  spots,
+  gbs,
+  main,
+  spot.seq.names = NULL,
+  sample.name = NULL,
+  scaling.factor = 1,
+  unit = NULL
+)
 }
 \arguments{
 \item{spots}{A list of \code{\link[spatstat]{ppp}} objects or a single \code{ppp} object defining the sample spot sequences. If \code{\link[spatstat]{marks}} are not specified, sequencial names will be used.}

@@ -4,11 +4,20 @@
 \alias{plot.spotDist}
 \title{Plot spotDist object}
 \usage{
-\method{plot}{spotDist}(x, ..., sample.name = "keep", spot.type = "id",
-  spot.size = 2, spot.color = NULL, main.type = "all",
-  growth.axis = NULL, color.palette = colorRampPalette(c("blue",
-  "cyan", "yellow", "red"), bias = 1)(100), highlight.gbs = NULL,
-  highlight.col = "red", crossing.points = FALSE)
+\method{plot}{spotDist}(
+  x,
+  ...,
+  sample.name = "keep",
+  spot.type = "id",
+  spot.size = 2,
+  spot.color = NULL,
+  main.type = "all",
+  growth.axis = NULL,
+  color.palette = colorRampPalette(c("blue", "cyan", "yellow", "red"), bias = 1)(100),
+  highlight.gbs = NULL,
+  highlight.col = "red",
+  crossing.points = FALSE
+)
 }
 \arguments{
 \item{x}{\code{\link[=spot.dist]{spotDist}} object}

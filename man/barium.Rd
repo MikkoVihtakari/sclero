@@ -4,7 +4,9 @@
 \name{barium}
 \alias{barium}
 \title{Barium to calcium ratios for sample spots in shellspots dataset}
-\format{A dataframe containing Ba/Ca information for \link{shellspots}. The object is ready for \code{\link{assign.size}} function.}
+\format{
+A dataframe containing Ba/Ca information for \link{shellspots}. The object is ready for \code{\link{assign.size}} function.
+}
 \usage{
 data(barium)
 }
